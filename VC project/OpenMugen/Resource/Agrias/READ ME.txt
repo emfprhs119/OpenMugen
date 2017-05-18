@@ -1,0 +1,73 @@
+Agrias Oaks version 1.0 Final version v1
+
+things done in this on this version
+i fix all the bugs i can find
+treaked the AI
+added more moves
+adjust some of the sprites palettes'
+and some other things i cant think of right now
+
+quick note, my game i have it set to one round, but the average life 
+is around 3000, the main reason for this is for bonus stages, i dont like
+doing things twice, that goes for matches as well.
+
+first of all, this is my first edit by me "kainintherain", this character 
+was originally done by "deretun", and i have to thank him or her for 
+creating one of my favorite final fantasy characters.
+
+second of all, this edit has sprites and moves from other characters and the
+list is as followed.................
+
+
+mvc style ken by "scar"
+his fireball along with hit sparks, and burst explod
+
+
+kikyo by "ricepigeon"
+aura deflector or curse deflector
+
+
+ogichi by "stormEX--team" 
+charging aura
+
+
+aura by "crucifix"
+wing sprites for intro & two inch
+
+
+ff6 terra or tina as its writen by "ali"
+bolt2, bolt3, ice3, fire3
+
+Agrias_oaks by "ouchi"
+lightningblade, crushsword, spellblade
+
+though this sprites and moves came from the list above, i have altered them
+in some way, some more than others.
+
+furthermore i have added moves of my own using existing sprites for this
+agrias along with existing moves and sprites from the list above.
+ 
+things still to come..........
+fix minor bugs
+adjustments on some moves, mainly damage
+these things will happen when i finish putting together my mugen project,
+which will probably happen mid summer 2013
+
+special thanks to
+"deretun" for agrias......
+"scar" for ken......
+"ricepigeon" for kikyo......
+"stormex and or team" for ogichi........
+"crucifix" for aura........ i love this character
+"ali" for ff6tina or terra........
+"ouchi" for Agrias_Oaks..........
+
+super special thanks to
+"noctis" for providing the sprites for my air blade and giving me much
+need feedback on this character which drove me to finish this version.......
+
+disclaimer............
+i do not own the rights to anything on mugen, ect.,ect.
+mugen is an open source whatever.....
+if you dont like the fact i used something or something than you shouldn't
+put you shit online for people to download.

@@ -1,20 +1,13 @@
-; KFM's constants and state file.
+ï»¿; KFM's constants and state file.
 ; There are comments scattered through this file, so you may like to
 ; take a look if would like to learn more about the cns.
 
-; ‚±‚ê‚ÍKFM‚Ì’è”‚Æó‘Ô‚Ìƒtƒ@ƒCƒ‹‚Å‚·B
-; ‚±‚Ìƒtƒ@ƒCƒ‹‚Ì’†‚É‚Í’ß‚ªU‚ç‚³‚ê‚Ä‚¢‚é‚Ì‚ÅACNS‚ğK‚¢‚½‚¢‚¨•û‚Í
-; “Ç‚ñ‚Å‚İ‚½‚ç‚¢‚¢‚Å‚·B
-
 [Data]
 ;Amount of life to start with
-;‘Ì—ÍƒQ[ƒW‚Ì‰Šú’l
 life = 1000
 ;attack power (more is stronger)
-;UŒ‚ƒ_ƒ[ƒW
 attack = 100
 ;defensive power (more is stronger)
-;‘Ì—Íƒpƒ[
 defence = 100
 ;Percentage to increase defense everytime player is knocked down
 fall.defence_up = 50
@@ -54,7 +47,7 @@ proj.doscale = 0     ;Set to 1 to scale projectiles too
 head.pos = -5, -90   ;Approximate position of head
 mid.pos = -5, -60    ;Approximate position of midsection
 shadowoffset = 0     ;Number of pixels to vertically offset the shadow
-draw.offset = 0,0    ;Player drawing offset in pixels (x, y)
+draw.offset = 0,0    ;Player drawing offset in pixels (x, y). Recommended 0,0
 
 [Velocity]
 walk.fwd  = 2.4      ;Walk forward
@@ -69,13 +62,57 @@ runjump.fwd = 4,-8.1      ;.
 airjump.neu = 0,-8.1      ;.
 airjump.back = -2.55      ;Air jump speeds (opt)
 airjump.fwd = 2.5         ;.
+air.gethit.groundrecover = -.15,-3.5  ;Velocity for ground recovery state (x, y) **MUGEN 1.0**
+air.gethit.airrecover.mul = .5,.2     ;Multiplier for air recovery velocity (x, y) **MUGEN 1.0**
+air.gethit.airrecover.add = 0,-4.5    ;Velocity offset for air recovery (x, y) **MUGEN 1.0**
+air.gethit.airrecover.back = -1       ;Extra x-velocity for holding back during air recovery **MUGEN 1.0**
+air.gethit.airrecover.fwd = 0         ;Extra x-velocity for holding forward during air recovery **MUGEN 1.0**
+air.gethit.airrecover.up = -2         ;Extra y-velocity for holding up during air recovery **MUGEN 1.0**
+air.gethit.airrecover.down = 1.5      ;Extra y-velocity for holding down during air recovery **MUGEN 1.0**
 
 [Movement]
-airjump.num = 1      ;Number of air jumps allowed (opt)
-airjump.height = 35  ;Minimum distance from ground before you can air jump (opt)
-yaccel = .44         ;Vertical acceleration
+airjump.num = 1       ;Number of air jumps allowed (opt)
+airjump.height = 35   ;Minimum distance from ground before you can air jump (opt)
+yaccel = .44          ;Vertical acceleration
 stand.friction = .85  ;Friction coefficient when standing
 crouch.friction = .82 ;Friction coefficient when crouching
+stand.friction.threshold = 2          ;If player's speed drops below this threshold while standing, stop his movement **MUGEN 1.0**
+crouch.friction.threshold = .05       ;If player's speed drops below this threshold while crouching, stop his movement **MUGEN 1.0**
+air.gethit.groundlevel = 25           ;Y-position at which a falling player is considered to hit the ground **MUGEN 1.0**
+air.gethit.groundrecover.ground.threshold = -20 ;Y-position below which falling player can use the recovery command **MUGEN 1.0**
+air.gethit.groundrecover.groundlevel = 10   ;Y-position at which player in the ground recovery state touches the ground **MUGEN 1.0**
+air.gethit.airrecover.threshold = -1  ;Y-velocity above which player may use the air recovery command **MUGEN 1.0**
+air.gethit.airrecover.yaccel = .35    ;Vertical acceleration for player in the air recovery state **MUGEN 1.0**
+air.gethit.trip.groundlevel = 15      ;Y-position at which player in the tripped state touches the ground **MUGEN 1.0**
+down.bounce.offset = 0, 20            ;Offset for player bouncing off the ground (x, y) **MUGEN 1.0**
+down.bounce.yaccel = .4               ;Vertical acceleration for player bouncing off the ground **MUGEN 1.0**
+down.bounce.groundlevel = 12          ;Y-position at which player bouncing off the ground touches the ground again **MUGEN 1.0**
+down.friction.threshold = .05         ;If the player's speed drops below this threshold while lying down, stop his movement **MUGEN 1.0**
+
+;Default language victory quotes (optional).  **MUGEN 1.0**
+;If this section is included, the default language victory quotes must be in English.
+[Quotes]
+; Up to 100 victory quotes can be specified per language (victory0 - victory99)
+victory1 = "You must defeat Tu Shou to stand a chance."
+victory2 = "You need a lot of training. Come back in ten years."
+victory3 = "You look familiar. Did I see you on TV?"
+victory4 = "Your moves are too predictable. You want to learn Kung Fu Palm? It's not for novices."
+victory5 = "That was a good workout."
+victory6 = "I want to challenge more skilled fighters."
+victory7 = "What do you mean my girlfriend is in another temple?"
+
+;Alternate language victory quotes (optional).
+;0 or more alternate language sections may be added, preceded by the
+;ISO 639-1 code followed by a ".", e.g. "[ja.Quotes]".
+;See language setting in mugen.cfg.
+[ja.Quotes]
+victory1 = "ã‚«ãƒ³ãƒ•ãƒ¼çªãæ‰‹ã‚’ç ´ã‚‰ã¬é™ã‚Šã€ãŠå‰ã«å‹ã¡ç›®ã¯ãªã„ï¼"
+victory2 = "åå¹´æ—©ã„ã‚“ã ã"
+victory3 = "ãŠå‰ã¯è¦‹è¦šãˆãŒã‚ã‚‹ãªã€‚ãƒ†ãƒ¬ãƒ“ã«ã§ã‚‚â€¦ï¼Ÿ"
+victory4 = "ãŠå‰ã®å‹•ãã¯è¦‹ç ´ã‚Šã‚„ã™ã™ãã‚‹ã€‚ã€€ãªã«ã€ã‚«ãƒ³ãƒ•ãƒ¼çªãæ‰‹ãŒè¦šãˆãŸã„ã‚“ã ã¨ï¼Ÿã€€ç´ äººã«ã¯ç„¡ç†ã ã"
+victory5 = "ãµãƒ¼ã€‚ã€€ã„ã„æ±—ã ã£ãŸ"
+victory6 = "ã‚‚ã£ã¨å¼·ã„ç›¸æ‰‹ã«æŒ‘æˆ¦ã—ãŸã„"
+victory7 = "ãªã‚“ã ã¨ï¼å½¼å¥³ã¯ã“ã“ã«ã‚‚ã„ãªã„ã¨ï¼Ÿ"
 
 ;---------------------------------------------------------------------------
 ; Variable usage:
@@ -89,7 +126,6 @@ crouch.friction = .82 ;Friction coefficient when crouching
 ;---------------------------------------------------------------------------
 ; Lose by Time Over
 ; CNS difficulty: basic
-; CNS ƒŒƒxƒ‹: Šî–{
 [Statedef 170]
 type = S
 ctrl = 0
@@ -105,7 +141,6 @@ time = 1
 ;---------------------------------------------------------------------------
 ; Win state decider
 ; CNS difficulty: basic
-; CNS ƒŒƒxƒ‹: Šî–{
 [Statedef 180]
 type = S
 
@@ -117,7 +152,6 @@ value = 181
 ;---------------------------------------------------------------------------
 ; Win pose 1 - Bow
 ; CNS difficulty: basic
-; CNS ƒŒƒxƒ‹: Šî–{
 [Statedef 181]
 type = S
 ctrl = 0
@@ -133,7 +167,6 @@ time = 1
 ;---------------------------------------------------------------------------
 ; Introduction
 ; CNS difficulty: basic
-; CNS ƒŒƒxƒ‹: Šî–{
 [Statedef 191]
 type = S
 ctrl = 0
@@ -157,8 +190,6 @@ value = 0
 
 ; You can delete the following two controllers if you're building your own
 ; character using KFM. These are the wood pieces that KFM kicks.
-; ‚±‚ê‚ªKFM‚ªR‚é–Ø‚Ì”Â‚Å‚·BKFM‚ÌCNS‚ğ‹M•û‚ÌƒLƒƒƒ‰‚É—˜—p‚µ‚Ä‚¢‚é‚È‚çA
-; ‰º‚É‚ ‚é“ñ‚Â‚ÌƒRƒ“ƒgƒƒ‰[‚ğÁ‚µ‚½‚ç‚¢‚¢‚Å‚·B
 [State 191, Wood 1]
 type = Explod
 trigger1 = RoundState != 0
@@ -186,7 +217,7 @@ removetime = 35
 [State 191, Snd 1]
 type = PlaySnd
 trigger1 = AnimElem = 7
-;value = F5,2
+value = F5,2
 volume = -40
 
 [State 191, Snd 2]
@@ -231,7 +262,7 @@ juggle  = 1                      ;Number of air juggle points move takes
 velset = 0,0                     ;Set velocity (x,y) (Def: no change)
 ctrl = 0                         ;Set ctrl (Def: no change)
 anim = 200                       ;Change animation (Def: no change)
-poweradd = 20                    ;Power to add (Def: 0)
+poweradd = 10                    ;Power to add (Def: 0)
 sprpriority = 2                  ;Set p1's sprite layering priority to 2 (in front)
 
 [State 200, 1]
@@ -252,20 +283,20 @@ hitsound = 5, 0                  ;Sound to play on hit
 guardsound = 6, 0                ;Sound to play on guard
 ground.type = High               ;Type: High, Low, Trip (def: Normal)
 ground.slidetime = 5             ;Time that the opponent slides back
-ground.hittime  = 10             ;Time opponent is in hit state
+ground.hittime  = 11             ;Time opponent is in hit state
 ground.velocity = -4             ;Velocity at which opponent is pushed
 airguard.velocity = -1.9,-.8     ;Guard velocity in air (def: (air.xvel*1.5, air.yvel/2))
 air.type = High                  ;Type: High, Low, Trip (def: same as ground.type)
 air.velocity = -1.4,-3           ;X-velocity at which opponent is pushed,
 ;Y-velocity at which opponent is pushed
-air.hittime = 12                 ;Time before opponent regains control in air
+air.hittime = 15                 ;Time before opponent regains control in air
 
-[State 200, 1]
+[State 200, 2]
 type = PlaySnd
 trigger1 = Time = 1
 value = 0, 0
 
-[State 200, 7]
+[State 200, 3]
 type = ChangeState
 trigger1 = AnimTime = 0
 value = 0
@@ -291,7 +322,7 @@ type    = S
 movetype= A
 physics = S
 juggle  = 4
-poweradd= 65
+poweradd= 30
 ctrl = 0
 velset = 0,0
 anim = 210
@@ -321,9 +352,10 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = High
 ground.slidetime = 12
-ground.hittime  = 13
+ground.hittime  = 16
 ground.velocity = -5.5
 air.velocity = -2.5,-4
+forcenofall = 1
 
 [State 210, 3]
 type = ChangeAnim
@@ -353,7 +385,7 @@ type    = S
 movetype= A
 physics = S
 juggle  = 4
-poweradd= 22
+poweradd= 11
 ctrl = 0
 velset = 0,0
 anim = 230
@@ -378,7 +410,7 @@ hitsound   = 5,1
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 10
-ground.hittime  = 11
+ground.hittime  = 14
 ground.velocity = -5
 air.velocity = -2.5,-3.5
 
@@ -396,7 +428,7 @@ type    = S
 movetype= A
 physics = S
 juggle  = 5
-poweradd= 65
+poweradd= 30
 ctrl = 0
 velset = 0,0
 anim = 240
@@ -421,7 +453,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 12
-ground.hittime  = 15
+ground.hittime  = 17
 ground.velocity = -6
 air.velocity = -2.2,-3.2
 
@@ -457,7 +489,7 @@ type    = C
 movetype= A
 physics = C
 juggle  = 5
-poweradd= 15
+poweradd= 8
 ctrl = 0
 anim = 400
 sprpriority = 2
@@ -483,13 +515,13 @@ hitsound   = 5,0
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 4
-ground.hittime  = 10
+ground.hittime  = 9
 ground.velocity = -4
 air.velocity = -1.5,-3
 
 [State 400, 3]
 type = CtrlSet
-trigger1 = Time = 5
+trigger1 = Time = 6
 value = 1
 
 [State 400, 4]
@@ -506,19 +538,12 @@ value = 11
 ;     air, because of the "M" in the guardflag, meaning it can only
 ;     be guarded "middle". The second hit has an "MA" guardflag, so
 ;     it can be guarded both on the ground and in the air.
-; CNS ƒŒƒxƒ‹: ˆÕ
-; Ú×: ‚±‚ê‚Í‰£‘Å‚ª“ñ”­‚ ‚éUŒ‚‚Å‚·B
-; ‰£‘Å‚Å‚«‚éƒAƒjƒ[ƒVƒ‡ƒ“‚Ì–‡‚ÍˆêXHitDef‚ğ“o˜^‚µ‚Ä‚¢‚Ü‚·B
-; ˆê”­–Ú‚ÌUŒ‚‚ÌHitDef‚É‚Íguardflag‚ªuMvimiddle’†’iƒK[ƒhj
-; ‚ÉƒZƒbƒg‚³‚ê‚Ä‚¢‚é‚Ì‚ÅA‘Šè‚Í‹ó’†‚ÅƒK[ƒh‚Å‚«‚Ü‚¹‚ñB“ñ”­–Ú
-; ‚ÌUŒ‚‚Ìguardflag‚ÍuMAvimiddle+air’†’i{‹ó’†ƒK[ƒhj‚ÅA
-; ’nãA‹ó’†‚Å‚àƒK[ƒh‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 [Statedef 410]
 type    = C
 movetype= A
 physics = C
 juggle  = 6
-poweradd= 50
+poweradd= 25
 ctrl = 0
 anim = 410
 sprpriority = 2
@@ -544,7 +569,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 12
-ground.hittime  = 15
+ground.hittime  = 17
 ground.velocity = -4
 air.velocity = -3,-4
 
@@ -563,7 +588,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = High
 ground.slidetime = 12
-ground.hittime  = 15
+ground.hittime  = 17
 ground.velocity = -7
 air.velocity = -3,-4
 
@@ -581,7 +606,7 @@ type    = C
 movetype= A
 physics = C
 juggle  = 5
-poweradd= 22
+poweradd= 11
 ctrl = 0
 anim = 430
 sprpriority = 2
@@ -610,7 +635,7 @@ ground.hittime  = 10
 ground.velocity = -5
 air.velocity = -2,-3
 down.velocity = -5,0
-down.hittime = 20
+down.hittime = 22
 
 [State 430, 3]
 type = ChangeState
@@ -626,14 +651,12 @@ ctrl = 1
 ;     animation as he falls. Also, the hitflag parameter in the HitDef
 ;     is set to "MAFD". The "D" indicates that a downed opponent can be
 ;     hit by the attack.
-; CNS ƒŒƒxƒ‹: ˆÕ
-; Ú×:
 [Statedef 440]
 type    = C
 movetype= A
 physics = C
 juggle  = 7
-poweradd= 70
+poweradd= 35
 ctrl = 0
 anim = 440
 sprpriority = 2
@@ -657,7 +680,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = Trip
 ground.slidetime = 10
-ground.hittime  = 15
+ground.hittime  = 17
 ground.velocity = -1.5,-2
 air.velocity = -1.2,-3
 guard.velocity = -5
@@ -677,7 +700,7 @@ type    = A
 movetype= A
 physics = A
 juggle  = 2
-poweradd= 11
+poweradd= 5
 ctrl = 0
 anim = 600
 sprpriority = 2
@@ -701,9 +724,10 @@ hitsound   = 5,0
 guardsound = 6,0
 ground.type = High
 ground.slidetime = 5
-ground.hittime  = 5
+ground.hittime  = 8
 ground.velocity = -4
 air.velocity = -1.3,-3
+air.hittime = 14
 
 [State 600, 3]
 type = CtrlSet
@@ -718,7 +742,7 @@ type    = A
 movetype= A
 physics = A
 juggle  = 4
-poweradd= 65
+poweradd= 30
 ctrl = 0
 anim = 610
 sprpriority = 2
@@ -742,9 +766,9 @@ hitsound   = 5,3
 guardsound = 6,0
 animtype = Med
 ground.type = High
-ground.slidetime = 17
-ground.hittime  = 17
-ground.velocity = -5
+ground.slidetime = 12
+ground.hittime  = 14
+ground.velocity = -6
 air.velocity = -3,-4
 
 ;---------------------------------------------------------------------------
@@ -755,7 +779,7 @@ type    = A
 movetype= A
 physics = A
 juggle  = 3
-poweradd= 20
+poweradd= 10
 ctrl = 0
 anim = 630
 sprpriority = 2
@@ -779,9 +803,10 @@ hitsound   = 5,0
 guardsound = 6,0
 ground.type = High
 ground.slidetime = 6
-ground.hittime  = 6
+ground.hittime  = 10
 ground.velocity = -4
 air.velocity = -2,-3
+air.hittime = 14
 
 ;---------------------------------------------------------------------------
 ;Jump Strong Kick
@@ -791,7 +816,7 @@ type    = A
 movetype= A
 physics = A
 juggle  = 4
-poweradd= 65
+poweradd= 30
 ctrl = 0
 anim = 640
 sprpriority = 2
@@ -815,9 +840,9 @@ hitsound   = 5,3
 guardsound = 6,0
 animtype = Med
 ground.type = High
-ground.slidetime = 15
+ground.slidetime = 12
 ground.hittime  = 15
-ground.velocity = -5
+ground.velocity = -7
 air.velocity = -3,-4
 
 ;---------------------------------------------------------------------------
@@ -895,7 +920,7 @@ type    = S
 movetype= A
 physics = N
 anim = 810
-poweradd = 60
+poweradd = 0
 
 ; Here a variable, var(2), is used to remember whether or not the
 ; player was holding forward at the start of the state. This variable
@@ -1099,7 +1124,7 @@ type    = S
 movetype= A
 physics = S
 juggle  = 4
-poweradd= 110
+poweradd= 55
 velset = 0,0
 anim = 1000
 ctrl = 0
@@ -1141,7 +1166,7 @@ hitsound   = 5,4
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 12
-ground.hittime  = 15
+ground.hittime  = 17
 ground.velocity = -4,-3.5
 air.velocity = -4,-3
 fall = 1
@@ -1161,7 +1186,7 @@ hitsound   = 5,4
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 12
-ground.hittime  = 15
+ground.hittime  = 17
 ground.velocity = -7
 air.velocity = -4,-2.5
 
@@ -1184,7 +1209,7 @@ type    = S
 movetype= A
 physics = S
 juggle  = 4
-poweradd= 120
+poweradd= 60
 velset = 0,0
 anim = 1010
 ctrl = 0
@@ -1231,7 +1256,7 @@ hitsound   = 5,4
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 12
-ground.hittime  = 15
+ground.hittime  = 17
 ground.velocity = -4,-3.5
 air.velocity = -4,-3
 fall = 1
@@ -1251,7 +1276,7 @@ hitsound   = 5,4
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 12
-ground.hittime  = 15
+ground.hittime  = 17
 ground.velocity = -7
 air.velocity = -4,-2.5
 
@@ -1352,7 +1377,7 @@ hitsound   = 5,4
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 20
-ground.hittime  = 20
+ground.hittime  = 22
 ground.velocity = -8,-7
 guard.velocity = -7
 air.velocity = -8,-7
@@ -1562,7 +1587,7 @@ type    = S
 movetype= A
 physics = S
 juggle  = 4
-poweradd= 110
+poweradd= 55
 velset = 0,0
 anim = 1050
 ctrl = 0
@@ -1597,7 +1622,7 @@ hitsound   = 5,3
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 20
-ground.hittime  = 20
+ground.hittime  = 22
 ground.velocity = -3.5,-7
 guard.velocity = -7
 air.velocity = -3.5,-7
@@ -1733,7 +1758,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = High
 ground.slidetime = 15
-ground.hittime  = 16
+ground.hittime  = 18
 ground.velocity = -6
 guard.velocity = -8
 guard.ctrltime = 12
@@ -1779,7 +1804,7 @@ type    = S
 movetype= A
 physics = S
 juggle  = 4
-poweradd= 120
+poweradd= 60
 velset = 0,0
 anim = 1060
 ctrl = 0
@@ -1814,7 +1839,7 @@ hitsound   = 5,3
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 20
-ground.hittime  = 20
+ground.hittime  = 22
 ground.velocity = -3.5,-7.5
 guard.velocity = -7
 air.velocity = -3.5,-7.5
@@ -1922,7 +1947,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 18
-ground.hittime  = 18
+ground.hittime  = 20
 ground.velocity = -2,-6
 guard.velocity = -7
 air.velocity = -2,-6
@@ -1981,7 +2006,7 @@ hitsound   = 5,3
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 18
-ground.hittime  = 18
+ground.hittime  = 20
 ground.velocity = -3,-9.5
 guard.velocity = -7
 air.velocity = -3,-9.5
@@ -2062,7 +2087,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = High
 ground.slidetime = 15
-ground.hittime  = 18
+ground.hittime  = 20
 ground.velocity = -6
 guard.velocity = -6
 air.velocity = -4,-6
@@ -2093,7 +2118,7 @@ type    = S
 movetype= A
 physics = S
 juggle  = 4
-poweradd= 110
+poweradd= 55
 velset = 0,0
 anim = 1100
 ctrl = 0
@@ -2123,7 +2148,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 15
-ground.hittime  = 18
+ground.hittime  = 20
 ground.velocity = -3
 guard.velocity = -6
 air.velocity = -2,-2
@@ -2145,7 +2170,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 15
-ground.hittime  = 18
+ground.hittime  = 20
 ground.velocity = -1,-9.5
 guard.velocity = -6
 air.velocity = -1,-7.5
@@ -2168,7 +2193,7 @@ type    = S
 movetype= A
 physics = S
 juggle  = 4
-poweradd= 120
+poweradd= 60
 velset = 0,0
 anim = 1110
 ctrl = 0
@@ -2198,7 +2223,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 15
-ground.hittime  = 18
+ground.hittime  = 20
 ground.velocity = -3
 guard.velocity = -6
 air.velocity = -2,-2
@@ -2220,7 +2245,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 15
-ground.hittime  = 18
+ground.hittime  = 20
 ground.velocity = -1,-10.5
 guard.velocity = -6
 air.velocity = -1,-8.5
@@ -2300,7 +2325,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 18
-ground.hittime  = 21
+ground.hittime  = 23
 ground.velocity = -3
 guard.velocity = -6
 air.velocity = -2,-2
@@ -2323,7 +2348,7 @@ hitsound   = 5,2
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 18
-ground.hittime  = 21
+ground.hittime  = 23
 ground.velocity = -1.2,-11
 guard.velocity = -6
 air.velocity = -1.2,-9
@@ -2349,7 +2374,7 @@ type    = S
 movetype= A
 physics = S
 juggle  = 4
-poweradd= 100
+poweradd= 50
 velset = 0,0
 anim = 1200
 ctrl = 0
@@ -2391,7 +2416,7 @@ hitsound   = 5,3
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 16
-ground.hittime  = 18
+ground.hittime  = 20
 ground.velocity = -10
 ground.cornerpush.veloff = -12 ;To push far away when p2 is in corner
 guard.velocity = -7
@@ -2412,7 +2437,7 @@ type    = S
 movetype= A
 physics = S
 juggle  = 4
-poweradd= 120
+poweradd= 60
 velset = 0,0
 anim = 1210
 ctrl = 0
@@ -2454,7 +2479,7 @@ hitsound   = 5,3
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 18
-ground.hittime  = 20
+ground.hittime  = 22
 ground.velocity = -10
 ground.cornerpush.veloff = -15 ;To push far away when p2 is in corner
 guard.velocity = -8
@@ -2543,7 +2568,7 @@ hitsound   = 5,4
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 20
-ground.hittime  = 30
+ground.hittime  = 32
 ground.velocity = -15
 ground.cornerpush.veloff = -20 ;To push far away when p2 is in corner
 guard.velocity = -9
@@ -2559,6 +2584,597 @@ trigger1 = AnimTime = 0
 value = 0
 ctrl = 1
 
+
+;---------------------------------------------------------------------------
+; Kung Fu Blocking High
+; CNS difficulty: medium
+; Notes: This move uses a ReversalDef controller to counter attacks. Any
+;        attacks not caught by the ReversalDef are handled by the HitOverride.
+;        The movetype is Idle because this is not an attack.
+[Statedef 1300]
+type    = S
+movetype= I
+physics = S
+velset = 0,0
+anim = 1300
+ctrl = 0
+sprpriority = 1
+
+[State 1300, Width]
+type = Width
+trigger1 = AnimElemTime(3) < 0
+value = 15,0
+
+[State 1300, 1]
+type = PlaySnd
+trigger1 = Time = 0
+value = 0, 1
+
+[State 1300, 2]
+type = ReversalDef
+trigger1 = Time = 0
+reversal.attr = SA, AA
+pausetime = 0,0
+sparkno = 40
+sparkxy = 40,0
+hitsound = 6,0
+p1stateno = 1310
+p1sprpriority = 2 ;Set P1's sprite in front of P2's
+p2sprpriority = 1
+
+[State 1300, 3] ;Stop ReversalDef
+type = ReversalDef
+trigger1 = Time = 4
+trigger1 = Time = command = "holdfwd"
+trigger2 = Time = 8
+reversal.attr =
+
+[State 1300, 4]
+type = HitOverride
+trigger1 = Time = 0
+attr = SA, AP
+stateno = 1310
+time = 8
+
+[State 1300, 5]
+type = HitOverride
+trigger1 = Time = 4
+trigger1 = Time = command = "holdfwd"
+attr =
+time = 0
+
+[State 1300, 6]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+; Kung Fu Blocking High (blocked)
+; Notes: This state uses a Pause controller to freeze the action dramatically.
+[Statedef 1310]
+type    = S
+movetype= I
+physics = S
+velset = 0,0
+anim = 1310
+ctrl = 0
+sprpriority = 2
+
+[State 1310, 1]
+type = Pause
+trigger1 = Time = 0
+time = 20
+endcmdbuftime = 20 ;Buffer commands input during the pause
+pausebg = 0        ;Don't pause backgrounds
+
+[State 1310, 2]    ;Go to guarding
+type = ChangeState
+trigger1 = Time = 1
+trigger1 = command = "holdback"
+value = 130
+ctrl = 1
+
+[State 1310, 3]
+type = NotHitBy
+trigger1 = Time = 0
+value = SCA
+time = 1
+
+[State 1310, 4]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+; Kung Fu Blocking Low
+[Statedef 1320]
+type    = C
+movetype= I
+physics = C
+velset = 0,0
+anim = 1320
+ctrl = 0
+sprpriority = 1
+
+[State 1320, Width]
+type = Width
+trigger1 = AnimElemTime(3) < 0
+value = 10,0
+
+[State 1320, 1]
+type = PlaySnd
+trigger1 = Time = 0
+value = 0, 1
+
+[State 1320, 2]
+type = ReversalDef
+trigger1 = Time = 0
+reversal.attr = C, AA
+pausetime = 0,0
+sparkno = 40
+sparkxy = 40,0
+hitsound = 6,0
+p1stateno = 1330
+p1sprpriority = 2
+p2sprpriority = 1
+
+[State 1320, 3] ;Stop
+type = ReversalDef
+trigger1 = Time = 5
+reversal.attr =
+
+[State 1320, 4]
+type = HitOverride
+trigger1 = Time < 5
+attr = C, AP
+stateno = 1330
+
+[State 1320, 5]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 11
+ctrl = 1
+
+;---------------------------------------------------------------------------
+; Kung Fu Blocking Low (blocked)
+[Statedef 1330]
+type    = C
+movetype= I
+physics = C
+velset = 0,0
+anim = 1330
+ctrl = 0
+sprpriority = 2
+
+[State 1330, 1]
+type = Pause
+trigger1 = Time = 0
+time = 20
+endcmdbuftime = 20 ;Buffer commands input during the pause
+pausebg = 0        ;Don't pause backgrounds
+
+[State 1330, 2]
+type = ChangeState
+trigger1 = Time = 1
+trigger1 = command = "holdback"
+value = 131
+ctrl = 1
+
+[State 1330, 3]
+type = NotHitBy
+trigger1 = Time = 0
+value = SCA
+time = 1
+
+[State 1330, 4]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 11
+ctrl = 1
+
+;---------------------------------------------------------------------------
+; Kung Fu Blocking Air
+[Statedef 1340]
+type    = A
+movetype= I
+physics = N
+anim = 1340
+ctrl = 0
+sprpriority = 1
+
+[State 1340, Width]
+type = Width
+trigger1 = AnimElemTime(3) < 0
+value = 10,0
+
+[State 1340, 1]
+type = PlaySnd
+trigger1 = Time = 0
+value = 0, 1
+
+[State 1340, 2]
+type = ReversalDef
+trigger1 = Time = 0
+reversal.attr = A, AA
+pausetime = 0,0
+sparkno = 40
+sparkxy = 40,0
+hitsound = 6,0
+p1stateno = 1350
+p1sprpriority = 2
+p2sprpriority = 1
+
+[State 1340, 3] ;Stop
+type = ReversalDef
+trigger1 = Time = 5
+reversal.attr =
+
+[State 1340, 4]
+type = HitOverride
+trigger1 = Time < 5
+attr = SA, AP
+stateno = 1350
+
+[State 1340, 5]
+type = CtrlSet
+trigger1 = AnimElem = 4
+value = 1
+
+[State 1340, 6] ;Gravity
+type = VelAdd
+trigger1 = 1
+y = Const(movement.yaccel)
+
+[State 1340, 6] ;Land from jump
+type = ChangeState
+trigger1 = (Pos Y >= 0) && (Vel Y > 0)
+value = 1351
+
+;---------------------------------------------------------------------------
+; Kung Fu Blocking Air (blocked)
+[Statedef 1350]
+type    = A
+movetype= I
+physics = N
+anim = 1350
+ctrl = 0
+sprpriority = 2
+
+[State 1350, 1]
+type = Pause
+trigger1 = Time = 0
+time = 20
+endcmdbuftime = 20 ;Buffer commands input during the pause
+pausebg = 0        ;Don't pause backgrounds
+
+[State 1350, 2]
+type = ChangeState
+trigger1 = Time = 1
+trigger1 = command = "holdback"
+value = 132
+ctrl = 1
+
+[State 1350, 3]
+type = NotHitBy
+trigger1 = Time = 0
+value = SCA
+time = 1
+
+[State 1350, 4] ;Stop KFM in the air
+type = PosFreeze
+trigger1 = AnimElemTime(3) < 0
+
+[State 1350, 5]
+type = CtrlSet
+trigger1 = AnimElem = 3
+value = 1
+
+[State 1350, 6] ;Gravity
+type = VelAdd
+trigger1 = AnimElemTime(3) > 0
+y = Const(movement.yaccel)
+
+[State 1350, 7] ;Land from jump
+type = ChangeState
+trigger1 = (Pos Y >= 0) && (Vel Y > 0)
+value = 1351
+
+;---------------------------------------------------------------------------
+; Kung Fu Blocking Air (land)
+[Statedef 1351]
+type    = S
+physics = S
+ctrl = 0
+anim = 47
+
+[State 1351, 1]
+type = VelSet
+trigger1 = Time = 0
+y = 0
+
+[State 1351, 2]
+type = PosSet
+trigger1 = Time = 0
+y = 0
+
+[State 1351, 3]
+type = CtrlSet
+trigger1 = Time = 3
+value = 1
+
+[State 1351, 4]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+[State 1351, 5] ;Go to high block
+type = ChangeState
+trigger1 = command = "blocking"
+trigger1 = command != "holddown"
+value = 1300
+
+[State 1351, 6] ;Go to low block
+type = ChangeState
+trigger1 = command = "blocking"
+value = 1320
+
+;---------------------------------------------------------------------------
+; Light Kung Fu Zankou
+; CNS difficulty: easy
+[Statedef 1400]
+type    = S
+movetype= A
+physics = N
+juggle  = 4
+poweradd= 50
+velset = 0,0
+anim = 1400
+ctrl = 0
+sprpriority = 2
+
+[State 1400, 1]
+type = PlaySnd
+trigger1 = AnimElem = 3
+value = 0, 3
+
+[State 1400, Friction]
+type = VelMul
+trigger1 = 1
+x = 0.5
+
+[State 1400, 2]
+type = HitDef
+trigger1 = Time = 0
+attr = S, SA
+animtype  = Hard
+damage    = 100, 6
+priority  = 4
+guardflag = MA
+pausetime = 12,12
+sparkxy = 0,-65
+hitsound   = 5,3
+guardsound = 6,0
+ground.type = Low
+ground.slidetime = 12
+ground.hittime  = 17
+ground.velocity = -9
+ground.cornerpush.veloff = -15 ;To push far away when p2 is in corner
+guard.velocity = -9
+air.velocity = -2,-5
+airguard.velocity = -3.5,-4.5
+air.fall = 1
+
+[State 1400, 3]
+type = PosAdd
+trigger1 = AnimElem = 2
+trigger2 = AnimElem = 3
+trigger3 = AnimElem = 4
+x = 10
+
+[State 1400, 4]
+type = VelSet
+trigger1 = AnimElem = 4
+x = 2
+
+[State 1400, 5]
+type = PosAdd
+trigger1 = AnimElem = 8
+x = 10
+
+[State 1400, 6]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+; Strong Kung Fu Zankou
+; CNS difficulty: easy
+[Statedef 1410]
+type    = S
+movetype= A
+physics = N
+juggle  = 4
+poweradd= 50
+velset = 0,0
+anim = 1410
+ctrl = 0
+sprpriority = 2
+
+[State 1410, 1]
+type = PlaySnd
+trigger1 = AnimElem = 3
+value = 0, 3
+
+[State 1410, Friction]
+type = VelMul
+trigger1 = 1
+x = 0.65
+
+[State 1410, 2]
+type = HitDef
+trigger1 = Time = 0
+attr = S, SA
+animtype  = Hard
+damage    = 100, 6
+priority  = 4
+guardflag = MA
+pausetime = 12,12
+sparkxy = 0,-65
+hitsound   = 5,3
+guardsound = 6,0
+ground.type = Low
+ground.slidetime = 12
+ground.hittime  = 17
+ground.velocity = -9
+ground.cornerpush.veloff = -15 ;To push far away when p2 is in corner
+guard.velocity = -9
+air.velocity = -2,-5
+airguard.velocity = -3.5,-4.5
+air.fall = 1
+
+[State 1410, 3]
+type = PosAdd
+trigger1 = AnimElem = 2
+trigger2 = AnimElem = 3
+trigger3 = AnimElem = 4
+x = 10
+
+[State 1410, 4]
+type = VelSet
+trigger1 = AnimElem = 3
+x = 8
+
+[State 1410, 5]
+type = PosAdd
+trigger1 = AnimElem = 9
+x = 10
+
+[State 1410, 6]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+; Far Kung Fu Zankou
+; CNS difficulty: easy
+[Statedef 1420]
+type    = S
+movetype= A
+physics = N
+juggle  = 6
+poweradd= -330
+velset = 0,0
+anim = 1420
+ctrl = 0
+sprpriority = 2
+
+[State 1420, Afterimage]
+type = AfterImage
+trigger1 = Time = 0
+length = 13
+PalBright   =  30, 30,  0
+PalContrast =  70, 70, 20
+PalAdd      = -10,-10,-10
+PalMul      = .85,.85,.50
+TimeGap  = 1
+FrameGap = 2
+Trans = Add
+time = 2
+
+[State 1420, Afterimage]
+type = AfterImageTime
+trigger1 = AnimElemTime(8) < 0
+time = 2
+
+[State 1420, Blink Yellow]
+type = PalFX
+trigger1 = Time = 0
+time = 20
+add = 32,16,0
+sinadd = 64,32,5,3
+
+[State 1420, 1]
+type = PlaySnd
+trigger1 = AnimElem = 3
+value = 0, 3
+
+[State 1420, Friction]
+type = VelMul
+trigger1 = 1
+x = 0.7
+
+[State 1420, 2]
+type = HitDef
+trigger1 = AnimElemTime(4) = -2
+attr = S, SA
+animtype  = Hard
+damage    = 25, 2
+getpower  = 0
+priority  = 4
+guardflag = MA
+pausetime = 9,9
+sparkxy = -15,-45
+hitsound   = 5,2
+guardsound = 6,0
+ground.type = Low
+ground.slidetime = 22
+ground.hittime  = 24
+ground.velocity = -7
+ground.cornerpush.veloff = -8 ;To push far away when p2 is in corner
+guard.velocity = -9
+air.velocity = -5,-4
+airguard.velocity = -3.5,-4.5
+
+[State 1420, 2]
+type = HitDef
+trigger1 = AnimElem = 4
+attr = S, SA
+animtype  = Hard
+damage    = 100, 8
+getpower  = 0
+priority  = 5
+guardflag = MA
+pausetime = 12,12
+sparkxy = 0,-65
+hitsound   = 5,3
+guardsound = 6,0
+ground.type = Low
+ground.slidetime = 22
+ground.hittime  = 24
+ground.velocity = -5,-4
+ground.cornerpush.veloff = -15 ;To push far away when p2 is in corner
+guard.velocity = -9
+air.velocity = -5,-4
+airguard.velocity = -3.5,-4.5
+fall = 1
+
+[State 1420, 3]
+type = PosAdd
+trigger1 = AnimElem = 2
+trigger2 = AnimElem = 3
+trigger3 = AnimElem = 4
+x = 10
+
+[State 1420, 4]
+type = VelSet
+trigger1 = AnimElemTime(3) = [1,2]
+x = 20
+
+[State 1420, 5]
+type = PosAdd
+trigger1 = AnimElem = 10
+x = 10
+
+[State 1420, 6]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
 
 ;---------------------------------------------------------------------------
 ; Triple Kung Fu Palm (hyper)
@@ -2664,7 +3280,7 @@ hitsound   = 5,4
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 30
-ground.hittime  = 30
+ground.hittime  = 32
 ground.velocity = -6
 air.velocity = -3,-2.8
 air.fall = 1
@@ -2686,7 +3302,7 @@ hitsound   = 5,4
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 30
-ground.hittime  = 30
+ground.hittime  = 32
 ground.velocity = -5, -4
 guard.velocity = -12
 air.velocity = -5,-4
@@ -2775,7 +3391,7 @@ hitsound   = 5,4
 guardsound = 6,0
 ground.type = Low
 ground.slidetime = 26
-ground.hittime  = 26
+ground.hittime  = 28
 ground.velocity = -1.3,-25
 guard.velocity = -11
 air.velocity = -1.3,-25

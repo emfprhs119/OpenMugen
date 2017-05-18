@@ -61,7 +61,7 @@ CTokenizer::CTokenizer( int bufferSize, char* commentChars, char** operators, in
     m_AtEndOfFile = false;
     
     m_ReturnNegativeSeperatelyFromNumber = false;
-    m_IsCaseSensitive = true;
+    m_IsCaseSensitive = false;
     
     m_LastTokenWasQuotedString = false;
 }
@@ -154,7 +154,7 @@ const char* CTokenizer::GetToken()
         bool haveHitSecondWhitespace = false;
         
         char* buf = m_Buffer;
-        while( !m_AtEndOfFile && ( buf - m_Buffer < m_BufferSize ))
+		while (!m_AtEndOfFile && (buf - m_Buffer < m_BufferSize))
         {
             char c = m_FileBuffer[ m_CurrFilePos++ ];
             
@@ -203,6 +203,7 @@ const char* CTokenizer::GetToken()
                                     m_AtEndOfLine = true;
                                     m_CurrFileLine++;
                                     m_LastLinePos = m_CurrFilePos;
+									break;
                                 }
                                 
                                 if( !isspace( c ) )
@@ -240,6 +241,7 @@ const char* CTokenizer::GetToken()
                         }                  
                         if( c == '\n' )
                         {
+							m_AtEndOfLine = true;
                             m_CurrFileLine++;
                             m_LastLinePos = m_CurrFilePos;
                             break;
@@ -332,7 +334,7 @@ const char* CTokenizer::GetToken()
         *buf = 0;
         m_NumOperatorCharsRead = 0;
     }
-    
+	m_AtEndOfLine = m_AtEndOfLine;
     m_BufferIsNextToken = false;
     return m_Buffer;
 }
@@ -368,7 +370,23 @@ bool CTokenizer::CheckToken( const char* stringToLookFor, bool consumeIfMatch )
         
     bool result = m_IsCaseSensitive ? ( strcmp( stringToLookFor, m_Buffer ) == 0 ) : ( strcmpi( stringToLookFor, m_Buffer ) == 0 ); 
     m_BufferIsNextToken = consumeIfMatch ? !result : true;
+
     return result;    
+}
+int CTokenizer::CheckNToken(const char* stringToLookFor,int length, bool consumeIfMatch)
+{
+	if (!m_BufferIsNextToken)
+	{
+		if (!GetToken())
+			return false;
+	}
+	bool result = m_IsCaseSensitive ? (strncmp(m_Buffer, stringToLookFor, length) == 0) : (strnicmp(m_Buffer, stringToLookFor, length) == 0);
+
+	m_BufferIsNextToken = consumeIfMatch ? !result : true;
+	if (result)
+		return m_Buffer[7] - '0';
+	else
+		return false;
 }
 
 float CTokenizer::GetFloat()
@@ -394,7 +412,29 @@ int CTokenizer::GetInt()
     m_BufferIsNextToken = false;
     return atoi( m_Buffer ); 
 }
+XYVALUE CTokenizer::getXYVALUE()
+{
+	XYVALUE tmpXY;
+	if (!m_BufferIsNextToken)
+	{
+		if (!GetToken())
+			return tmpXY;
+	}
 
+	m_BufferIsNextToken = false;
+
+	tmpXY.x = (float)atof(m_Buffer);
+	if (CheckToken(","))
+	{
+	}
+	if (!m_BufferIsNextToken)
+	{
+		if (!GetToken())
+			return tmpXY;
+	}
+	tmpXY.y = (float)atof(m_Buffer);
+	return tmpXY;
+};
 bool CTokenizer::CheckTokenIsNumber()
 {
     if( !m_BufferIsNextToken )
@@ -420,7 +460,24 @@ bool CTokenizer::CheckTokenIsNumber()
     
     return ( len > 0 );
 }
+int CTokenizer::CheckTokenIsStatetype()
+{
+	if (strlen(m_Buffer) == 1){
+		switch (m_Buffer[0]){
+		case 'S':return stand;
+		case 'C':return crouch;
+		case 'A':return air;
+		case 'L':return liedown;
+			//case 'AT':return attack;
+		case 'I':return idle;
+		case 'H':return hit;
+		case 'N':return none;
+		case 'U':return untouch;
+		}
+	}
+	return -1;
 
+}
 bool CTokenizer::CheckTokenIsQuotedString()
 {
     if( !m_BufferIsNextToken )

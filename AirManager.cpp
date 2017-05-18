@@ -37,11 +37,9 @@ void CAirManager::ResetManager()
    nTotalActionBlock=0;
    nActionListSize=100;
    nElementListSize=100;
-   nTotalCns=0;
+   //nTotalClsn=0;
    bDefaultClsn=false;
-   
    lpActionList=(ActionElement*)m_pAlloc->Alloc(sizeof(ActionElement)*nActionListSize);
-
 }
 //add one action block int the list
 void CAirManager::AddAction(s32 nActionNumber)
@@ -58,7 +56,6 @@ void CAirManager::AddAction(s32 nActionNumber)
      {
         nActionListSize+=100;
         lpActionList=(ActionElement*)m_pAlloc->Realloc(lpActionList,sizeof(ActionElement)*nActionListSize);
-                                  
      }
      //Set loop start -1
      lpActionList[nTotalActionBlock].loopStart=-1;
@@ -98,30 +95,57 @@ void CAirManager::AddElement(s16 nGroupNumber,s16 nImageNumber,s16 x,s16 y,
    lpActionList[nTotalActionBlock-1].AnimationElement[nTotalElement].nDuringTime=nDuringTime;
    lpActionList[nTotalActionBlock-1].AnimationElement[nTotalElement].FlipFlags=nFlip;
    lpActionList[nTotalActionBlock-1].AnimationElement[nTotalElement].ColorFlags=nColorFlag;
-   
+   if (nTotalElement==0)
+	lpActionList[nTotalActionBlock - 1].nCompletAnimTime = 0;
    lpActionList[nTotalActionBlock-1].nCompletAnimTime+=nDuringTime;
-   
-   lpActionList[nTotalActionBlock-1].AnimationElement[nTotalElement].nNumberOfClsn=nTotalCns;
-   
-       
-   
-   if(!bDefaultClsn)
+  
+   if (lpActionList[nTotalActionBlock - 1].nCompletAnimTime <-1){
+	   printf("");
+   }
+
+   if (!bDefaultClsn1)
    {
-       lpActionList[nTotalActionBlock-1].AnimationElement[nTotalElement].pClnsData=(Clsn*)m_pAlloc->Alloc(sizeof(Clsn)*nTotalCns);             
-      
-       memcpy(lpActionList[nTotalActionBlock-1].AnimationElement[nTotalElement].pClnsData,
-              pClsn,sizeof(Clsn)* nTotalCns); 
-                                                                                        
-       nTotalCns=0;
+	   if (nTotalClsn1 > 0){
+		   lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].pClsn1Data = (Clsn*)m_pAlloc->Alloc(sizeof(Clsn)*(nTotalClsn1));
+		   memcpy(lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].pClsn1Data,
+			   pClsn1, sizeof(Clsn)*(nTotalClsn1));
+	   }
+	   lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].nNumberOfClsn1 = (nTotalClsn1);
+	   nTotalClsn1 = 0;
    }
    else
    {
-       lpActionList[nTotalActionBlock-1].AnimationElement[nTotalElement].pClnsData=(Clsn*)m_pAlloc->Alloc(sizeof(Clsn)*nTotalCns);             
-       memcpy(lpActionList[nTotalActionBlock-1].AnimationElement[nTotalElement].pClnsData,
-       pClsn,sizeof(Clsn)* nTotalCns); 
+	   if (nTotalClsn1Def > 0){
+		   lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].pClsn1Data = (Clsn*)m_pAlloc->Alloc(sizeof(Clsn)*(nTotalClsn1Def));
+		   memcpy(lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].pClsn1Data,
+			   pClsn1Def, sizeof(Clsn)*(nTotalClsn1Def));
+	   }
+	   lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].nNumberOfClsn1 = (nTotalClsn1Def);
    }
-     
-  
+
+   if (!bDefaultClsn2)
+   {
+	   if (nTotalClsn2 > 0){
+		   lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].pClsn2Data = (Clsn*)m_pAlloc->Alloc(sizeof(Clsn)*(nTotalClsn2));
+		   memcpy(lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].pClsn2Data,
+			   pClsn2, sizeof(Clsn)*(nTotalClsn2));
+	   }
+	   lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].nNumberOfClsn2 = (nTotalClsn2);
+	   nTotalClsn2 = 0;
+   }
+   else
+   {
+	   if (nTotalClsn2Def > 0){
+		   lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].pClsn2Data = (Clsn*)m_pAlloc->Alloc(sizeof(Clsn)*(nTotalClsn2Def));
+		   memcpy(lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].pClsn2Data,
+			   pClsn2Def, sizeof(Clsn)*(nTotalClsn2Def));
+	   }
+	   lpActionList[nTotalActionBlock - 1].AnimationElement[nTotalElement].nNumberOfClsn2 = (nTotalClsn2Def);
+   }
+
+   bDefaultClsn1 = true;
+   bDefaultClsn2 = true;
+   bDefaultClsn = true;
    nTotalElement++;
    lpActionList[nTotalActionBlock-1].nNumberOfElements=nTotalElement;
 
@@ -133,6 +157,7 @@ void CAirManager::SetLoop()
 
 }
 //to add a Clsn box 
+
 void CAirManager::AddClsnBox(s16 x,s16 y,s16 w,s16 h,int nNumberOfClsn)
 {
  /*   if(nTotalCns > 200)
@@ -140,22 +165,54 @@ void CAirManager::AddClsnBox(s16 x,s16 y,s16 w,s16 h,int nNumberOfClsn)
        
   /*  if(nNumberOfClsn!=nTotalCns)
        PrintMessage("Wrong cns index at line %i(%i != %i)",nLineNr,nNumberOfClsn,nTotalCns);*/
+	
+	
+	pClsn[*nTotalClsn].ClsnRect.x = x;
+	pClsn[*nTotalClsn].ClsnRect.y = y;
+	pClsn[*nTotalClsn].ClsnRect.w = w;
+	pClsn[*nTotalClsn].ClsnRect.h = h;
+	pClsn[*nTotalClsn].bClsn1 = bIsClsn1;
 
-    pClsn[nTotalCns].ClsnRect.x=x;
-    pClsn[nTotalCns].ClsnRect.y=y;
-    pClsn[nTotalCns].ClsnRect.w=w;
-    pClsn[nTotalCns].ClsnRect.h=h;
-    pClsn[nTotalCns].bClsn1=bIsClsn1;
     
-    
-    nTotalCns++;
+	(*nTotalClsn)++;
 }
 
 void CAirManager::CreateClsnBox(u16 nNumberOfClsn,bool bClsn1,bool bDefault)
 {
   bDefaultClsn=bDefault;
   bIsClsn1=bClsn1;
- // nTotalCns=0;
+  if (bClsn1)
+	  bDefaultClsn1 = bDefault;
+  else
+	  bDefaultClsn2 = bDefault;
+
+  if (bDefaultClsn)
+  {
+	  if (bIsClsn1)
+	  {
+		  pClsn = pClsn1Def;
+		  nTotalClsn = &nTotalClsn1Def;
+	  }
+	  else
+	  {
+		  pClsn = pClsn2Def;
+		  nTotalClsn = &nTotalClsn2Def;
+	  }
+  }
+  else
+  {
+	  if (bIsClsn1)
+	  {
+		  pClsn = pClsn1;
+		  nTotalClsn = &nTotalClsn1;
+	  }
+	  else
+	  {
+		  pClsn = pClsn2;
+		  nTotalClsn = &nTotalClsn2;
+	  }
+  }
+  *nTotalClsn = 0;
   
 }
 
@@ -188,7 +245,9 @@ void CAirManager::OpenAir(char *strFileName)
 
     while( !tok.AtEndOfFile() )
     {
+		
         int actionNum = -1;
+
         if( tok.CheckToken( "[" ) )
         {
             if( !tok.CheckToken( "Begin" ) )
@@ -204,11 +263,13 @@ void CAirManager::OpenAir(char *strFileName)
             }
             
             actionNum = tok.GetInt();
-            
             if( !tok.CheckToken( "]" ) )
             {
             }
-            
+			nTotalClsn1Def = 0;
+			nTotalClsn2Def = 0;
+			nTotalClsn1 = 0;
+			nTotalClsn2 = 0;
             AddAction( actionNum );                       
         }
         else if( tok.CheckToken( "Clsn1Default:", false ) || tok.CheckToken( "Clsn2Default:", false ) || tok.CheckToken( "Clsn1:", false ) || tok.CheckToken( "Clsn2:", false ) )
@@ -216,7 +277,8 @@ void CAirManager::OpenAir(char *strFileName)
             const char* token = tok.GetToken();
             bool isClsn1 = ( token[ 4 ] == '1' );
             bool isDefault = ( strlen( token ) > 7 );
-                        
+
+
             if( !tok.CheckTokenIsNumber() )
             {
             }
@@ -319,6 +381,7 @@ void CAirManager::OpenAir(char *strFileName)
         }
         else
         {
+			tok.GetToken();
         }
     }    
     tok.CloseFile();

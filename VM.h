@@ -24,7 +24,7 @@
 #ifndef VM_H
 #define VM_H
 
-#define NUMFUNCT 140
+#define NUMFUNCT 141
 
 class CVirtualMachine
 {
@@ -82,6 +82,7 @@ void CanRecover();
 void Ceil();
 void Command();
 void Const();
+void ConstCoordinate();
 void Cos();
 void Ctrl();
 void DrawGame();
@@ -125,6 +126,7 @@ void NumPartner();
 void NumProj();
 void NumProjID();
 void NumTarget();
+void P1Name();
 void P2BodyDist();
 void P2Dist();
 void P2Life();

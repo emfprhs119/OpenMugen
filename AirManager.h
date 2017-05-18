@@ -33,11 +33,22 @@ u16           nActionListSize;
 u16           nAnimTime;
 u16           nTotalElement;
 u16           nElementListSize;
-u16           nTotalCns;
+u16           nTotalClsn1;
+u16           nTotalClsn2;
+u16           nTotalClsn1Def;
+u16           nTotalClsn2Def;
 u16           nCnsListSize;
 bool          bDefaultClsn;
+bool          bDefaultClsn1;
+bool          bDefaultClsn2;
 bool          bIsClsn1;
-Clsn          pClsn[200];
+Clsn          pClsn1[200];
+Clsn          pClsn2[200];
+Clsn          pClsn1Def[200];
+Clsn          pClsn2Def[200];
+
+Clsn *pClsn;
+u16 *nTotalClsn;
 public:
 	CAirManager();
 	~CAirManager();
@@ -54,7 +65,6 @@ public:
    void CleanUp();
    void RealocateActionBlock();
    void ResetManager();
-
 
 
 	

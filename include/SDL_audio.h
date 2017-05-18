@@ -34,7 +34,6 @@
 #include "SDL_mutex.h"
 #include "SDL_thread.h"
 #include "SDL_rwops.h"
-
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -74,7 +73,7 @@ extern "C" {
 typedef struct SDL_AudioSpec {
 	int freq;		/**< DSP frequency -- samples per second */
 	Uint16 format;		/**< Audio data format */
-	Uint8  channels;	/**< Number of channels: 1 mono, 2 stereo */
+	int  channels;	/**< Number of channels: 1 mono, 2 stereo */
 	Uint8  silence;		/**< Audio buffer silence value (calculated) */
 	Uint16 samples;		/**< Audio buffer size in samples (power of 2) */
 	Uint16 padding;		/**< Necessary for some compile environments */

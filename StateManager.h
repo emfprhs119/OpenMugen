@@ -49,7 +49,8 @@ public:
 
 	void AddStateDef(s32 nStateDefNum);
 	void AddState(s32 nStateNum,char *strSomeNumber);
-	void AddTriggerToState(u8 nType);
+	void AddTriggerAllToState(u8 nType);
+	void AddTriggerToState(int triggNum,u8 nType);
 	void AddTypeToState(u16 nType);
 	void AddInstruction(Uint16 nOpCode,float value,const char *strValue);
 	void ExchangeIns();
@@ -82,7 +83,9 @@ public:
     void NewInst(){nCurrInst=0;}
 	// state…Ë÷√≤Œ ˝
 	void SetParam(ConParmName nParam);
-	void SetHDParam(CONTROLHITDEFParmName nParam);
+	void SetHDParam(CONTROLHITDEFParmName nParam, HITDEFVARSET set);
+	void SetParamNum(ConParmName nParam, s8 vNum);
+	void SetParamNum(ConParmName nParam, u8 num, u8 num1,SNDFLAG flag=COMMON);
 	void SetPersistent();
 	void SetIgnorehitpause();
 	void SetDefaultStatedef();
@@ -98,6 +101,7 @@ private:
 	u16        nTotalState;
 	u16        nTotalStateSize;
 	u16        nCurrTrigger;
+	u16        nCurrTriggerAll;
 	u16        nTriggerListSize;
 	u16 nCurrInst;
 	u16 nCurrParamInst;

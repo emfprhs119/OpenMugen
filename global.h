@@ -19,7 +19,7 @@
 #include <string.h>
 #include <malloc.h>
 #include <math.h>
-
+#include <time.h>
 #ifdef __linux__
 #define strcmpi strcasecmp
 #endif
@@ -40,10 +40,12 @@ class CGameTimer;
 #include "scale2x.h"
 #include "Timer.h"
 #include "SDL_framerate.h"
+#include "SDL_audio.h"
 #include "VideoSystem.h"
 #include "SDLManager.h"
 #include "AirManager.h"
 #include "SffManager.h"
+#include "SndManager.h"
 #include "Stack.h"
 #include "StateManager.h"
 #include "ControllerExecuter.h"

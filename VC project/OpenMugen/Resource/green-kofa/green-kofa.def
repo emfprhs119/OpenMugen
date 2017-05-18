@@ -1,0 +1,32 @@
+; Definition file for Kung Fu Man
+; Contains all the filenames needed for the character
+
+; Player information
+[Info]
+name ="Green"
+displayname ="Green"
+versiondate =04,14,2002
+mugenversion =04,14,2002
+author ="Elecbyte/Gurin Sanda"
+pal.defaults =1,2,3,4
+
+; Files for the player
+[Files]
+cmd     =G.cmd
+cns     =G.cns
+st      =G.cns
+stcommon =common1.cns
+sprite  =G.sff
+anim    =G.air
+sound   =G.snd
+pal1=G1.act
+pal2=G2.act
+pal3=G3.act
+pal4=G.act
+pal5=G3.act
+pal6=G2.act
+
+; Arcade mode
+[Arcade]
+intro.storyboard =
+ending.storyboard =

@@ -69,7 +69,7 @@ bool CSffManager::LoadSffFile(const char *strSffFile)
   fseek(lpSffFile,header.SubHeaderFileOffset,SEEK_SET);
   
   DecodeSffFile();
-  
+  printf("why");
   fclose(lpSffFile);
   
   //save memory
@@ -81,7 +81,7 @@ bool CSffManager::LoadSffFile(const char *strSffFile)
 //Load an Colorpallet from file
 bool CSffManager::LoadActToSff(const char *strActFile)
 {
-  bPalletLoaded=true;    
+  //bPalletLoaded=true;    
   
   FILE *Act=fopen(strActFile,"rb");
 
@@ -117,15 +117,18 @@ void CSffManager::BlitSprite(s16 nGroupNumber,s16 nImageNumber,s16 x, s16 y)
         return;
         
     //normal blit with with masked bits
-    if(nFlags==BLT_NORMAL)
+	
+	 if(nFlags==BLT_NORMAL)
        m_pVideoSystem->NormalBlt(&lpSpriteList[i],x,y,false);
     
+	 
     if(nFlags== BLT_NORMALMASKED)
        m_pVideoSystem->NormalBlt(&lpSpriteList[i],x,y,true);
-       
+	
     if(nFlags== BLT_FLIPH)
        m_pVideoSystem->NormalFlipH(&lpSpriteList[i],x,y,false);
-       
+      
+	
     if(nFlags== BLT_FLIPHMASKED)
        m_pVideoSystem->NormalFlipH(&lpSpriteList[i],x,y,true);
                          
@@ -135,55 +138,60 @@ void CSffManager::BlitSprite(s16 nGroupNumber,s16 nImageNumber,s16 x, s16 y)
 }
 
 //prepares the animation
-void CSffManager::PrepareAnim(s32 nAnim)
+void CSffManager::PrepareAnim(s32 nAnim, bool spark)
 {
-    Anim=m_pAirManger->GetAction(nAnim);
+
+	ActionElement *anim;
+	anim = m_pAirManger->GetAction(nAnim);
     
-    Anim->nDuringTime=m_pTimer->GetGameTime()+Anim->AnimationElement[0].nDuringTime;
-    Anim->nCurrentImage=0;
-    Anim->bLooped=false;
-    Anim->nCurrentImageTime=0;
-    Anim->nCurrTime=0;
+
+	spark ? SparkAnim=anim : Anim=anim;
+
+	anim->nDuringTime = m_pTimer->GetGameTime() + anim->AnimationElement[0].nDuringTime;
+	anim->nCurrentImage = 0;
+	anim->bLooped = false;
+	anim->nCurrentImageTime = 0;
+	anim->nCurrTime = 0;
 }
-
-
-//Blit the given animation
-void CSffManager::BlitAnim(s16 x, s16 y)
+void CSffManager::BlitAnim(s16 x, s16 y,bool spark)
 {
-    
-            
-    BlitSprite(Anim->AnimationElement[Anim->nCurrentImage].nGroupNumber,
-                Anim->AnimationElement[Anim->nCurrentImage].nImageNumber,
-                x,y);
-                
-    
-        
-     //is the current image in time? && do not check if during time of the current image is -1
-     if(Anim->nDuringTime <= m_pTimer->GetGameTime() && Anim->AnimationElement[Anim->nCurrentImage].nDuringTime!=-1)
-     {
-       Anim->nCurrentImage++;
-       
-      
-       if(Anim->nCurrentImage >= Anim->nNumberOfElements)
-       {
-          Anim->nCurrentImage=0;
-          Anim->nCurrTime=0;
-         //if we have a loop start go to it
-         if(Anim->loopStart!=-1) 
-         Anim->nCurrentImage=Anim->loopStart;
-          
-       }
-       
+	ActionElement *anim;
+	
+	anim = spark ? SparkAnim:Anim;
+	if (anim->nCurrentImage >= anim->nNumberOfElements)
+		return;
+	BlitSprite(anim->AnimationElement[anim->nCurrentImage].nGroupNumber,
+		anim->AnimationElement[anim->nCurrentImage].nImageNumber,
+		x + anim->AnimationElement[anim->nCurrentImage].x, y+anim->AnimationElement[anim->nCurrentImage].y);
+	//is the current image in time? && do not check if during time of the current image is -1
+	if (next){
+		if (anim->nDuringTime <= m_pTimer->GetGameTime() && anim->AnimationElement[anim->nCurrentImage].nDuringTime != -1)
+		{
+			anim->nCurrentImage++;
 
-       //calculate the new during time
-       Anim->nDuringTime=m_pTimer->GetGameTime()+Anim->AnimationElement[Anim->nCurrentImage].nDuringTime;
-           
-     }
-     Anim->nCurrTime++;
-     
-     
+
+			if (anim->nCurrentImage >= anim->nNumberOfElements && !spark)
+			{
+				anim->nCurrentImage = 0;
+				anim->nCurrTime = 0;
+				//if we have a loop start go to it
+				
+					if (anim->loopStart != -1)
+						anim->nCurrentImage = anim->loopStart;
+				
+
+			}
+
+			//calculate the new during time
+			anim->nDuringTime = m_pTimer->GetGameTime() + anim->AnimationElement[anim->nCurrentImage].nDuringTime;
+
+		}
+		anim->nCurrTime++;
+	}
+	else{
+		anim->nDuringTime = m_pTimer->GetGameTime() + anim->AnimationElement[anim->nCurrentImage].nDuringTime;
+	}
 }
-
 //decodes one PCX file
 u8* CSffManager::DecodePcx(u8* PcxByte,PCXHEADER header)
 {
@@ -286,7 +294,6 @@ void CSffManager::DecodeSffFile()
          
        
       }
-	        
       //copy the information contained in the subheader
       lpSpriteList[nTotalImages].GroupNumber=subheader.GroubNumber;
       lpSpriteList[nTotalImages].ImageNumber=subheader.ImageNumber;
@@ -317,40 +324,33 @@ void CSffManager::DecodeSffFile()
         //move the file pointer to Color pallet of the PCX file
 		fseek(lpSffFile,-768L,SEEK_CUR);
 		
-        //eat empty 8bit
-		fgetc(lpSffFile);
-		
-		if(fgetc(lpSffFile)==12 && !subheader.PalletSame &&
+		if ((fgetc(lpSffFile) == 12) && !subheader.PalletSame &&
            !bPalletLoaded       && lpSpriteList[nTotalImages].PcxHeader.NPlanes<=1)
         {
-           for(int j=0;j<256;j++)
-    	   {
-                   int r,g,b;
-                   r=fgetc(lpSffFile);
-                   g=fgetc(lpSffFile);
-                   b=fgetc(lpSffFile);
-		           ColorPallet[j]=m_pVideoSystem->MapRGB(r,
-                                                         g,
-                                                         b );
-                   
-
-           }
+			for (int j = 0; j < 255; j++)
+			{
+				int r, g, b;
+				r = fgetc(lpSffFile);
+				g = fgetc(lpSffFile);
+				b = fgetc(lpSffFile);
+				ColorPallet[j] = m_pVideoSystem->MapRGB(r,
+					g,
+					b);
+			}
                                 
         }
         
         //copy the color pallet to the Sffsprite Struct
-		memcpy(&lpSpriteList[nTotalImages].ColorPallet,
-               &ColorPallet,
-               sizeof(u16)*256);   
+		memcpy(&lpSpriteList[nTotalImages].ColorPallet,&ColorPallet,sizeof(u16)*256);   
 
                                         
       }
       else
       {
-		  //subheader.IndexOfPrevious-1 if the first ellement is 1 and not 0
+		  //subheader.IndexOfPrevious-1 if the first ellement is 1 and not 0  -fuck you
           // we have a linked image here
           memcpy(&lpSpriteList[nTotalImages],
-                 &lpSpriteList[subheader.IndexOfPrevious-1],
+                 &lpSpriteList[subheader.IndexOfPrevious],
                  sizeof(SFFSPRITE));
                  
           lpSpriteList[nTotalImages].GroupNumber=subheader.GroubNumber;
@@ -372,12 +372,12 @@ void CSffManager::DecodeSffFile()
 int CSffManager::FindSprite(s16 nGroupNumber,s16 nImageNumber)
 {
     
-    for(int i=0;i<nImageListSize;i++)
+    for(int i=0;i<nTotalImages;i++)
     {
        if(lpSpriteList[i].GroupNumber == nGroupNumber &&
           lpSpriteList[i].ImageNumber == nImageNumber)
        {   
-              
+            
        return i;                                   
        }
     }

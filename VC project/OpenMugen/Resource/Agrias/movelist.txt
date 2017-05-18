@@ -1,0 +1,67 @@
+special movelist--------------------------------------------------------
+
+upper slash= F,D,DF, a/b/c
+
+blade= D,F, a/b/c
+
+dengeki= D,B, a/b/c
+
+cure= D,D, a/b/c  ;powercost=250 (cannot preform during lightning armor) 
+
+supercure= D,D, y  ;powercost=750 (cannot preform during lightning armor)
+
+charge = hold z  ;(cannot preform during lightning armor or cures' regain)
+
+fire spell= D+y  ;powercost=300 (can be done in air also)(cannot preform during lightning armor)
+
+ice spell= B+y  ;powercost=350 (can be done in air also)(cannot preform during lightning armor)
+
+lightning spell = F+y  ;powercost=400 (can be done in air also)
+
+Aura = x ; (cannot preform during lightning armor)
+
+two inch1 = F,B, a  ;powercost=500 (cannot preform during lightning armor)
+
+two inch1 = F,B, b  ;powercost=650 (cannot preform during lightning armor)
+
+two inch1 = F,B, c  ;powercost=800 (cannot preform during lightning armor)
+
+fireball = B,F, a/b/c 
+
+teleport attack = D,B, a/b/c  ;powercost=10  ;in the air only
+
+triple fireball = B,D,F, a/b/c  ;powercost=250
+
+teleportback= B+x
+
+teleportforward = F+x
+
+EX-moves-----------------------------------------------------------------
+
+spell blade = D,F,B, a  ;powercost=500 (cannot preform during lightning armor)
+
+crush sword = D,F,B, b  ;powercost=500 (cannot preform during lightning armor)
+
+lightningblade = D,F,B, c  ;powercost=750
+
+air blade = D,F, a/b/c  ;powercost=250-500  ;in the air only
+
+hyper movelist-----------------------------------------------------------
+
+lightning armor = a,a,F,c  ;powercost=1000 (cannot preform during cures' regain)
+
+stasis sword= D,B, a+b/b+c/a+c  ;powercost=1000 (cannot preform during lightning armor)
+
+superblade= D,F, a+b/b+c/a+c  ;powercost=1000
+
+triple air blade= D,F, a+b/b+c/a+c  ;powercost=1000  ;in the air only
+
+superlightningblade= D,F, b+y ;powercost=1500
+
+dengeki combo= D,B,F, a  ;powercost=2000-2500
+
+charging stasis sword= D,B,F, b  ;powercost=2000-2500
+
+charging combo stasis sword= D,B,F, c  ;powercost=2000-4500
+
+superlightning= D,F,B, y  ;powercost=2500 (only during lightning armor)

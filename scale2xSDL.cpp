@@ -29,6 +29,8 @@
 
 void scale2x(SDL_Surface *src, SDL_Surface *dst)
 {
+	//dst = src;
+	
      if(SDL_LockSurface(src) < 0)
         PrintMessage("scale2x:Was not able to lock work surface");
     
@@ -92,7 +94,8 @@ void scale2x(SDL_Surface *src, SDL_Surface *dst)
 				*(Uint16*)(dstpix + (looph*2+1)*dstpitch + loopw*2*2) = E2;
 				*(Uint16*)(dstpix + (looph*2+1)*dstpitch + (loopw*2+1)*2) = E3;
 			}
-		}break;}
+		}
+		break;}
 	case 3: { 
 	    	int E0, E1, E2, E3, B, D, E, F, H;
 		for(looph = 0; looph < height; ++looph)
@@ -116,7 +119,7 @@ void scale2x(SDL_Surface *src, SDL_Surface *dst)
 				WRITEINT24((dstpix + (looph*2+1)*dstpitch + (loopw*2+1)*3), E3);
 			}
 		}break;}
-	default: { /*case 4:*/
+	default: { 
 	    	Uint32 E0, E1, E2, E3, B, D, E, F, H;
 		for(looph = 0; looph < height; ++looph)
 		{
@@ -142,5 +145,6 @@ void scale2x(SDL_Surface *src, SDL_Surface *dst)
 	}
    SDL_UnlockSurface(src);
    SDL_UnlockSurface(dst);
+   
 }
 

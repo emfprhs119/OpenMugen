@@ -18,12 +18,16 @@ public:
 	char* GetPartToken();
     const char* GetToken();
     bool        GetToken( char* destString, int maxLength );
+	
     bool        CheckToken( const char* stringToLookFor, bool consumeIfMatch = true );
+	int		CheckNToken(const char* stringToLookFor, int length, bool consumeIfMatch = true);
     bool        CheckTokenIsNumber();       // returns true if token is a number
+	int		CheckTokenIsStatetype();
     bool        CheckTokenIsQuotedString();  // makes sure token is quoted string
     
     int         GetInt();
     float       GetFloat();
+	XYVALUE		getXYVALUE();
     
     void        SetIsCaseSensitive( bool b )  { m_IsCaseSensitive = b; }
     void        SetReturnNegativeSeperatelyFromNumber( bool b )  { m_ReturnNegativeSeperatelyFromNumber = b; }
@@ -31,7 +35,8 @@ public:
     const char* GetFileName()       { return m_Filename; }
     int         GetLineNumber()     { return m_CurrFileLine; }
     int         GetColumnNumber()   { return m_CurrFilePos - m_LastLinePos; }
-          
+	bool		IsNextToken()			{ return m_BufferIsNextToken; }
+
 protected:    
     char*   m_Buffer;   
     int     m_BufferSize;

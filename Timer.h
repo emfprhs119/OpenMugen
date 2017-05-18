@@ -9,7 +9,8 @@ bool  bPause;
 public:
     void ResetTimer(){nGameTime=0;bPause=false;}
     void UpdateTimer(){if(!bPause)nGameTime++;}
-    u32  GetGameTime(){return nGameTime;}
+
+	u32  GetGameTime(){return nGameTime;}
     void Pause(){bPause=true;}
     void Resume(){bPause=false;}
 };

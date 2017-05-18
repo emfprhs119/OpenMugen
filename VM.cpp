@@ -27,7 +27,7 @@ CVirtualMachine::CVirtualMachine()
     m_Stack.ResetStack();
     nCurrentIns=0;
     InitFunctTable();
-  
+	srand(time(NULL));
 }
 //Destructor
 CVirtualMachine::~CVirtualMachine()
@@ -79,8 +79,6 @@ void CVirtualMachine::InitFunctTable()
    pFuncTable[32]=&CVirtualMachine::Alive;
    pFuncTable[33]=&CVirtualMachine::Anim;
    pFuncTable[34]=&CVirtualMachine::AnimElem;
-//   pFuncTable[35]=&CVirtualMachine::Save;
-//   pFuncTable[36]=&CVirtualMachine::Restore;
    pFuncTable[35]=&CVirtualMachine::AnimeElemNo;
    pFuncTable[36]=&CVirtualMachine::AnimeElemTime;
    pFuncTable[37]=&CVirtualMachine::AnimExist;
@@ -96,6 +94,8 @@ void CVirtualMachine::InitFunctTable()
    pFuncTable[47]=&CVirtualMachine::Const;
    pFuncTable[48]=&CVirtualMachine::Cos;
    pFuncTable[49]=&CVirtualMachine::Ctrl;
+   pFuncTable[50] = &CVirtualMachine::ConstCoordinate;//temp;
+	   pFuncTable[51] = 0;//temp;
    pFuncTable[52]=&CVirtualMachine::DrawGame;
    pFuncTable[53]=0;//&CVirtualMachine::E;
    pFuncTable[54]=&CVirtualMachine::Exp;
@@ -138,52 +138,56 @@ void CVirtualMachine::InitFunctTable()
    pFuncTable[91]=&CVirtualMachine::NumProj;
    pFuncTable[92]=&CVirtualMachine::NumProjID;
    pFuncTable[93]=&CVirtualMachine::NumTarget;
-   pFuncTable[94]=&CVirtualMachine::P2BodyDist;
-   pFuncTable[95]=&CVirtualMachine::P2Dist;
-   pFuncTable[96]=&CVirtualMachine::P2Life;
-   pFuncTable[97]=&CVirtualMachine::P2MoveType;
-   pFuncTable[98]=&CVirtualMachine::P2Name;
-   pFuncTable[99]=&CVirtualMachine::P2StateNo;
-   pFuncTable[100]=&CVirtualMachine::P2StateType;
-   pFuncTable[101]=&CVirtualMachine::P3Name;
-   pFuncTable[102]=&CVirtualMachine::P4Name;
-   pFuncTable[103]=&CVirtualMachine::PalNo;
-   pFuncTable[104]=&CVirtualMachine::ParentDist;
-   pFuncTable[105]=&CVirtualMachine::Pi;
-   pFuncTable[106]=&CVirtualMachine::Pos;
-   pFuncTable[107]=&CVirtualMachine::Power;
-   pFuncTable[108]=&CVirtualMachine::PowerMax;
-   pFuncTable[109]=0;//PlayerIDExist
-   pFuncTable[110]=0;//PrevStateNo
-   pFuncTable[111]=&CVirtualMachine::ProjCancelTime;
-   pFuncTable[112]=&CVirtualMachine::ProjContact;
-   pFuncTable[113]=&CVirtualMachine::ProjContactTime;
-   pFuncTable[114]=&CVirtualMachine::ProjGuarded;
-   pFuncTable[115]=&CVirtualMachine::ProjGuardedTime;
-   pFuncTable[116]=0;//ProjHit
-   pFuncTable[117]=0;//ProjHitTime
-   pFuncTable[118]=&CVirtualMachine::Random;
-   pFuncTable[119]=&CVirtualMachine::RootDist;
-   pFuncTable[120]=&CVirtualMachine::RoundNo;
-   pFuncTable[121]=&CVirtualMachine::RoundsExisted;
-   pFuncTable[122]=&CVirtualMachine::RoundState;
-   pFuncTable[123]=&CVirtualMachine::ScreenPos;
-   pFuncTable[124]=&CVirtualMachine::SelfAnimExist;
-   pFuncTable[125]=&CVirtualMachine::Sin;
-   pFuncTable[126]=&CVirtualMachine::StateNo;
-   pFuncTable[127]=&CVirtualMachine::StateType;
-   pFuncTable[128]=&CVirtualMachine::SysFVar;
-   pFuncTable[129]=&CVirtualMachine::SysVar;
-   pFuncTable[130]=&CVirtualMachine::Tan;
-   pFuncTable[131]=&CVirtualMachine::TeamMode;
-   pFuncTable[132]=&CVirtualMachine::TeamSide;
-   pFuncTable[133]=&CVirtualMachine::TicksPerSecond;
-   pFuncTable[134]=&CVirtualMachine::Time;
-   pFuncTable[135]=0;//TimeMod
-   pFuncTable[136]=&CVirtualMachine::UniqHitCount;
-   pFuncTable[137]=&CVirtualMachine::Var;
-   pFuncTable[138]=&CVirtualMachine::Vel;
-   pFuncTable[139]=&CVirtualMachine::Win;
+   pFuncTable[94] = 0;//&CVirtualMachine::P1Name;
+   pFuncTable[95]=&CVirtualMachine::P2BodyDist;
+   pFuncTable[96]=&CVirtualMachine::P2Dist;
+   pFuncTable[97]=&CVirtualMachine::P2Life;
+   pFuncTable[98]=&CVirtualMachine::P2MoveType;
+   pFuncTable[99]=&CVirtualMachine::P2Name;
+   pFuncTable[100]=&CVirtualMachine::P2StateNo;
+   pFuncTable[101]=&CVirtualMachine::P2StateType;
+   pFuncTable[102]=&CVirtualMachine::P3Name;
+   pFuncTable[103]=&CVirtualMachine::P4Name;
+   pFuncTable[104]=&CVirtualMachine::PalNo;
+   pFuncTable[105]=&CVirtualMachine::ParentDist;
+   pFuncTable[106]=&CVirtualMachine::Pi;
+   pFuncTable[107]=&CVirtualMachine::Pos;
+   pFuncTable[108]=&CVirtualMachine::Power;
+   pFuncTable[109]=&CVirtualMachine::PowerMax;
+   pFuncTable[110]=0;//PlayerIDExist
+   pFuncTable[111] = &CVirtualMachine::PrevStateNo;
+   pFuncTable[112]=&CVirtualMachine::ProjCancelTime;
+   pFuncTable[113]=&CVirtualMachine::ProjContact;
+   pFuncTable[114]=&CVirtualMachine::ProjContactTime;
+   pFuncTable[115]=&CVirtualMachine::ProjGuarded;
+   pFuncTable[116]=&CVirtualMachine::ProjGuardedTime;
+   pFuncTable[117]=0;//ProjHit
+   pFuncTable[118]=0;//ProjHitTime
+   pFuncTable[119]=&CVirtualMachine::Random;
+   pFuncTable[120]=&CVirtualMachine::RootDist;
+   pFuncTable[121]=&CVirtualMachine::RoundNo;
+   pFuncTable[122]=&CVirtualMachine::RoundsExisted;
+   pFuncTable[123]=&CVirtualMachine::RoundState;
+   pFuncTable[124]=&CVirtualMachine::ScreenPos;
+   pFuncTable[125]=&CVirtualMachine::SelfAnimExist;
+   pFuncTable[126]=&CVirtualMachine::Sin;
+   pFuncTable[127]=&CVirtualMachine::StateNo;
+   pFuncTable[128]=&CVirtualMachine::StateType;
+   pFuncTable[129]=&CVirtualMachine::SysFVar;
+   pFuncTable[130]=&CVirtualMachine::SysVar;
+   pFuncTable[131]=&CVirtualMachine::Tan;
+   pFuncTable[132] = &CVirtualMachine::TeamMode;
+   pFuncTable[133]=&CVirtualMachine::TeamSide;
+   pFuncTable[134]=&CVirtualMachine::TicksPerSecond;
+   pFuncTable[135]=&CVirtualMachine::Time;
+   pFuncTable[136] = 0;//&CVirtualMachine::TimeMod;
+   pFuncTable[137] = &CVirtualMachine::UniqHitCount;
+   pFuncTable[138] = &CVirtualMachine::Var;
+   pFuncTable[139] = &CVirtualMachine::Vel;
+   pFuncTable[140] = &CVirtualMachine::Win;
+   pFuncTable[141] = &CVirtualMachine::MODOP;
+
+   //pFuncTable[140] = 0;
 
 }
 
@@ -196,17 +200,25 @@ float CVirtualMachine::Execute(INSTRUCTION *pInst)
         
     //Rest the Satck for the next execution
     m_Stack.ResetStack();
-  
+	
     while(pInst[nCurrentIns].n_OpCode!=OP_STOP)
     {
-        
+		
         pCurrentIns=&pInst[nCurrentIns];
+
+		PrintMessage("%d,  %s %f\n",  pInst[nCurrentIns].n_OpCode, pInst[nCurrentIns].strValue, pInst[nCurrentIns].Value);
         //Execute the function
+		//(this->*pFuncTable[136])();
+		if (pInst[nCurrentIns].n_OpCode == 22)
+			printf("");
+		if (pInst[nCurrentIns].n_OpCode == 136)
+			Vel();
+		//else if ( pInst[nCurrentIns].n_OpCode != 132)
+		else
         (this->*pFuncTable[pInst[nCurrentIns].n_OpCode])();
         nCurrentIns++;
     }
     PopValue();
-     
     return m_pop.Value;
 
 }
@@ -272,61 +284,34 @@ void CVirtualMachine::DivOP()
 //x==Y
 void CVirtualMachine::EqualOP()
 {
-   char strTemp[50],strTemp1[50];
+   //char strTemp[50],strTemp1[50];
 
     PopValue();
     temp2=m_pop.Value;
-    strcpy(strTemp,m_pop.string);
-
     PopValue();
     temp1=m_pop.Value;
-    strcpy(strTemp1,m_pop.string);
-    
-    if(strTemp[0] != '#' && strTemp1[0] != '#')
-    {
-        if( strcmp(strTemp,strTemp1)==0)
-        {
-                m_Stack.Push(1,"#");
-        }
-        else
-                m_Stack.Push(0,"#");
-                
- //    PrintMessage("%s != %s" ,strTemp,strTemp1);                     
-        
-        return;    
-    
-    }
-    
-    
-    
-    
-
     if(temp1==temp2)
-        m_pop.Value=1;
+		m_Stack.Push(1, "#");
     else
-        m_pop.Value=0;
+		m_Stack.Push(0, "#");
 
 #ifdef DEBUG    
     PrintMessage("%f == %f",temp1,temp2);
 #endif
-    m_Stack.Push(m_pop.Value,"#");
+    //m_Stack.Push(m_pop.Value,"#");
 
 }
 //x!=y
 void CVirtualMachine::NotEqual()
 {
-    PopValue();
-    temp2=m_pop.Value;
-    PopValue();
-    temp1=m_pop.Value;
-    
-
-    if(temp1!=temp2)
-        m_pop.Value=1;
-    else
-        m_pop.Value=0;
-
-    m_Stack.Push(m_pop.Value,"#");
+	PopValue();
+	temp2 = m_pop.Value;
+	PopValue();
+	temp1 = m_pop.Value;
+	if (temp1 != temp2)
+		m_Stack.Push(1, "#");
+	else
+		m_Stack.Push(0, "#");
 
 }
 //x<y
@@ -343,7 +328,6 @@ void CVirtualMachine::Less()
     else
         m_pop.Value=0;
         
-    //PrintMessage("%f < %f",temp1,temp2);
 
     m_Stack.Push(m_pop.Value,"#");
 
@@ -574,7 +558,6 @@ void CVirtualMachine::LogAnd()
     temp2=m_pop.Value;
     PopValue();
     temp1=m_pop.Value;
-    
     if( temp1>0 && temp2>0)
         m_Stack.Push(1,"#");
     else
@@ -618,7 +601,7 @@ void CVirtualMachine::Not()
     
     temp1=m_pop.Value;
         
-    temp1=~(int)temp1;
+    temp1=!(int)temp1;
     m_Stack.Push(temp1,"#");
 
 }
@@ -713,7 +696,6 @@ void CVirtualMachine::Alive()
 void CVirtualMachine::Anim()
 {
   m_Stack.Push((float)m_pPlayer1->GetAnim(),"#");
-
 }
 
 //Anime Elem
@@ -725,7 +707,7 @@ void CVirtualMachine::AnimElem()
     
            
     //Time since this element
-    m_Stack.Push((float)tActionElement->nCurrTime,"#");
+    //m_Stack.Push((float)tActionElement->nCurrTime,"#");
     //Element nummber(NOTE first element is not 0 it is 1)
     m_Stack.Push((float)tActionElement->nCurrentImage+1,"#");
   
@@ -793,7 +775,7 @@ void CVirtualMachine::AnimeElemTime()
     //(NOTE first element is not 0 it is 1)
     if(nElementToCheck == tActionElement->nCurrentImage+1 && !tActionElement->bLooped )
     {
-        m_Stack.Push((float)tActionElement->nCurrentImageTime,"#");
+		m_Stack.Push((float)tActionElement->nCurrentImageTime, "#");
     
     }
     else
@@ -821,14 +803,14 @@ void CVirtualMachine::AnimExist()
 //AnimeTime
 void CVirtualMachine::AnimTime()
 {
-    u16 nAnimTime;
+    int nAnimTime;
     ActionElement* tActionElement;
     
     tActionElement=m_pPlayer1->GetCurrAnim();
 
-    nAnimTime=tActionElement->nCurrTime - tActionElement->nCompletAnimTime;
-    
-    m_Stack.Push((float)nAnimTime,"#");
+	nAnimTime = (s16)tActionElement->nCurrTime - tActionElement->nCompletAnimTime ;
+	
+    m_Stack.Push((int)nAnimTime,"#");
 }
 
 //Asin(expr)
@@ -855,8 +837,8 @@ void CVirtualMachine::Atan()
 //Author Name
 void CVirtualMachine::AuthorName()
 {
-    /*PrintMessage("AuthorName %s",((CPlayer*)m_p1)->myPlayerData.strAuthor);
-    m_Stack.Push(0,((CPlayer*)m_p1)->myPlayerData.strAuthor);*/
+    //PrintMessage("AuthorName %s",((CPlayer*)m_p1)->myPlayerData.strAuthor);
+    m_Stack.Push(0,((CPlayer*)m_p1)->GetInfo().author);
 }
  
 //BackEdgeBodyDist
@@ -874,7 +856,7 @@ void CVirtualMachine::BackEdgeDist()
 void CVirtualMachine::CanRecover()
 {
     //Push false for the moment
-    m_Stack.Push(0,"#");    
+    m_Stack.Push(1,"#");    
 
 }
 
@@ -890,269 +872,320 @@ void CVirtualMachine::Ceil()
 //Command
 void CVirtualMachine::Command()
 {
+	/*
 	if (!m_pPlayer1->IsCtrl())
 	{
 		m_Stack.Push(0,NULL);
 		return;
 	}
-    m_Stack.Push(0,m_pPlayer1->GetCommand());
+	*/
+	PopValue();
+	temp1 = m_pop.Value;
+	PopValue();
+	
+	if (temp1 == 0)// EQUAL
+		m_Stack.Push((m_pPlayer1->GetBCommand()[(int)m_pop.Value]),"#");
+	else// NOT EQUAL
+		m_Stack.Push((!m_pPlayer1->GetBCommand()[(int)m_pop.Value]), "#");
+	
+	
 }
 
 //Const
 void CVirtualMachine::Const()
 {
-    PopValue();
+	PopValue();
     temp1=m_pop.Value;
     //TODO: Write the GetConst function for player
    switch((int)temp1)
    {
       //data.life
       case Const_Data_Life:
-        m_Stack.Push((float)((CPlayer*)m_p1)->myPlayerConst.PlayerData.nLife,"#");
+        m_Stack.Push((float)((CPlayer*)m_p1)->GetConst().PlayerData.nLife,"#");
       break;
       
       //data.attack
       case 1:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerData.nAttack,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerData.nAttack,"#");
       break;
       
       //data.defence
       case 2:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerData.nDefence,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerData.nDefence,"#");
       break;
       
       //data.fall.defence_mul
       case 3:
-         temp1=100/(m_pPlayer1->myPlayerConst.PlayerData.nFallDefenceUp+100);
+         temp1=100/(m_pPlayer1->GetConst().PlayerData.nFallDefenceUp+100);
         m_Stack.Push(temp1,"#");
       break;
       
       //data.liedown.time
       case 4:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerData.nLieDownTime,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerData.nLieDownTime,"#");
       break;
       
       //data.airjuggle
       case 5:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerData.nAirjuggle,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerData.nAirjuggle,"#");
       break;
 
       //data.sparkno
       case 6:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerData.nSparkno,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerData.nSparkno,"#");
       break;   
 
      //data.guard.sparkno
       case 7:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerData.nGuardSparkno,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerData.nGuardSparkno,"#");
       break; 
       
      //data.KO.echo
       case 8:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerData.bKoEcho,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerData.bKoEcho,"#");
       break; 
       
      //data.IntPersistIndex
       case 9:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerData.nIntPersistIndex,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerData.nIntPersistIndex,"#");
       break; 
 
      //data.IntPersistIndex
       case 10:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerData.nFloatPersistIndex,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerData.nFloatPersistIndex,"#");
       break; 
       
       //size.xscale
       case 11:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nXscale,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nXscale,"#");
       break; 
      
       //size.yscale
       case 12:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nYscale,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nYscale,"#");
       break; 
       
       //size.ground.back
       case 13:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nGroundBack,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nGroundBack,"#");
       break; 
       
       //size.ground.front
       case 14:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nGroundFront,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nGroundFront,"#");
       break; 
       
       //size.air.back
       case 15:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nAirBack,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nAirBack,"#");
       break; 
       
       //size.air.front
       case 16:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nAirFront,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nAirFront,"#");
       break; 
       
       //size.attack.dist
       case 17:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nAttackDistance,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nAttackDistance,"#");
       break; 
       
       //size.proj.attack.dist
       case 18:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nProjAttackDist,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nProjAttackDist,"#");
       break; 
       
       //size.proj.doscale
       case 19:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.bProjDoScale,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.bProjDoScale,"#");
       break; 
       
       //size.head.pos.x
       case 20:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nHeadPos.x,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nHeadPos.x,"#");
       break;
 
       //size.head.pos.y
       case 21:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nHeadPos.y,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nHeadPos.y,"#");
       break;  
       
       //size.mid.pos.x
       case 22:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nMidPos.x,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nMidPos.x,"#");
       break;
       
       //size.mid.pos.y
       case 23:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nMidPos.y,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nMidPos.y,"#");
       break;
       
       //size.size.shadowoffset
       case 24:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nShadowOffset,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nShadowOffset,"#");
       break;
       
       //size.draw.offset.x
       case 25:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nDrawOffset.x,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nDrawOffset.x,"#");
       break;
       
       //size.draw.offset.x
       case 26:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerSize.nDrawOffset.x,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerSize.nDrawOffset.x,"#");
       break;
       
       //velocity.walk.fwd.x
       case 27:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.nWalkFwd,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.nWalkFwd,"#");
       break;
       
       //velocity.walk.back.x
       case 28:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.nWalkBack,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.nWalkBack,"#");
       break;
       
       //velocity.run.fwd.x
       case 29:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.RunFwd.x,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.RunFwd.x,"#");
       break;
       
       //velocity.run.fwd.y
       case 30:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.RunFwd.y,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.RunFwd.y,"#");
       break;
       
       //velocity.run.back.x
-      case 31:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.RunBack.x,"#");
+      case 32:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.RunBack.x,"#");
       break;
       
-      //velocity.back.fwd.y
-      case 32:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.RunBack.y,"#");
+      //velocity.run.back.y
+      case 33:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.RunBack.y,"#");
       break;
       
       //velocity.jump.neu.x
-      case 33:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.JumpNeu.x,"#");
+      case 34:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.JumpNeu.x,"#");
       break;
       
       //velocity.jump.back.x
-      case 34:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.JumpBack.x,"#");
-      break;
-      
-      //velocity.jump.fwd.x
       case 35:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.JumpFwd.x,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.JumpBack.x,"#");
+      break;
+
+      //velocity.jump.fwd.x
+      case 36:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.JumpFwd.x,"#");
       break;
       
       //velocity.runjump.back.x
-      case 36:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.RunBack.x,"#");
+      case 37:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.RunBack.x,"#");
       break;
       
       //velocity.runjump.fwd.x
-      case 37:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.RunFwd.x,"#");
+      case 38:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.RunFwd.x,"#");
       break;
       
       //velocity.airjump.neu.x
-      case 38:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.AirjumpNeu.x,"#");
+      case 39:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.AirjumpNeu.x,"#");
       break;
       
       //velocity.airjump.back.x
-      case 39:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.AirjumpBack.x,"#");
+      case 40:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.AirjumpBack.x,"#");
       break;
       
       //velocity.airjump.fwd.x
-      case 40:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerVelocity.AirjumpFwd.x,"#");
+      case 41:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.AirjumpFwd.x,"#");
       break;
       
       //movement.airjump.num
-      case 41:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerMovement.AirJumpNum,"#");
+      case 42:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.AirJumpNum,"#");
       break;
       
       //movement.airjump.height
-      case 42:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerMovement.nAirJumpHight,"#");
+      case 43:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.nAirJumpHight,"#");
       break;
       
       //movement.yaccel
-      case 43:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerMovement.yaccel,"#");
+      case 44:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.yaccel,"#");
       break;
       
       //movement.stand.friction
-      case 44:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerMovement.StandFriction,"#");
-      break;
-      
-      //movement.crouch.friction
       case 45:
-        m_Stack.Push(m_pPlayer1->myPlayerConst.PlayerMovement.CrouchFriction,"#");
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.StandFriction,"#");
       break;
+	  case 46:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.CrouchFriction, "#");
+		  break;
+	  case 47:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.StandFrictionThreshold, "#");
+		  break;
+      //movement.crouch.friction
+      case 48:
+        m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.CrouchFrictionThreshold,"#");
+      break;
+	  //movement.crouch.friction.threadhold
       //velocity.jump.y
-      case 46:
-       m_Stack.Push(0,"#");
+      case 49:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.JumpNeu.y, "#");
       break;
       //velocity.airjump.y
-      case 47:
-       m_Stack.Push(0,"#");
+      case 50:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerVelocity.AirjumpNeu.y, "#");
       break;
-
-
+	  case 51:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.air_gethit_groundlevel, "#");
+		  break;
+	  case 52:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.air_gethit_groundrecover_ground_threshold, "#");break;
+	  case 53:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.air_gethit_groundrecover_groundlevel, "#");break;
+	  case 54:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.air_gethit_airrecover_threshold, "#");break;
+	  case 55:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.air_gethit_airrecover_yaccel, "#");break;
+	  case 56:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.air_gethit_trip_groundlevel, "#");break;
+	  case 57:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.down_bounce_offset.x, "#"); break; 
+	  case 58:
+			  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.down_bounce_offset.y, "#"); break;
+	  case 59:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.down_bounce_yaccel, "#");break;
+	  case 60:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.down_bounce_groundlevel, "#");break;
+	  case 61:
+		  m_Stack.Push(m_pPlayer1->GetConst().PlayerMovement.down_friction_threshold, "#");break;
       default:
-        PrintMessage("CVirtualMachine::Invalide Const Param");    
+        //PrintMessage("CVirtualMachine::Invalide Const Param");
+		m_Stack.Push(0, "#");
       break;
    }
 
 }
-
+void CVirtualMachine::ConstCoordinate(){
+	temp1=m_pop.Value;
+	PopValue();
+	temp2 = m_pop.Value;
+	if (temp1 == 240)
+		temp1 = 320;
+	else if (temp1 == 480)
+		temp1 = 640;
+	else if (temp1 == 720)
+		temp1 = 1024;
+	m_Stack.Push(m_pPlayer1->GetInfo().localcoord.x / temp1*temp2,"#");
+	
+}
 //cosinus
 void CVirtualMachine::Cos()
 {
@@ -1228,19 +1261,19 @@ void CVirtualMachine::FrontEdgeDist()
 //FVAR
 void CVirtualMachine::FVar()
 {
-   /* PopValue();
+    PopValue();
     temp1=m_pop.Value;
     
-    temp1=m_pPlayer1->GetFVar((int)temp1);
+	temp1 = m_pPlayer1->GetVar(CPN_fvar,temp1);
     m_Stack.Push(temp1,"#");
-*/
+
 }
 
 //GameTime
 void CVirtualMachine::GameTime()
 {
     //TODO:Put the real game time on Stack
-  //  m_Stack.Push((float)GetGameTicks(),"#");
+  //m_Stack.Push((float)GetGameTicks(),"#");
     
 }
 
@@ -1250,8 +1283,45 @@ void CVirtualMachine::GetHitVar()
     //TODO:Get the correct Hitvar and push it on the stack
     PopValue();
     temp1=m_pop.Value;
-   
-     m_Stack.Push(0,"#");
+	HITVARDATA hitVarData = m_pPlayer2->GetHitVarData();
+	switch (GetHitVarNum((int)temp1)){
+	case xveladd:break;
+	case yveladd:break;
+	case type:break;
+		case animtype:temp1 = hitVarData.animtype; break;
+		case airtype:break;
+		case groundtype:temp1 = hitVarData.ground_type-6; break;
+		case damage:temp1 = hitVarData.hit_damage; break;
+		case hitcount:break;
+		case fallcount:temp1 = 0; break;
+		case hitshaketime:temp1 = hitVarData.hitshaketime; break;
+		case hittime:temp1 = hitVarData.ground_hittime; break;
+		case slidetime:temp1 = hitVarData.ground_slidetime; break;
+		case ctrltime:break;
+		case recovertime:break;
+		case xoff:break;
+		case yoff:break;
+		case zoff:break;
+		case xvel:temp1 = 0; break;
+		case yvel:temp1 = hitVarData.ground_velocity.y; break;
+		case yaccel:temp1 = hitVarData.yaccel; break;
+		case hitid:break;
+		case chainid:break;
+		case guarded:break;
+		case fall:temp1=hitVarData.fall; break;
+		case fall_damage:break;
+		case fall_xvel:break;
+		case fall_yvel:temp1 = hitVarData.fall_yvelocity; break;
+		case fall_recover:break;
+		case fall_time:break;
+		case fall_recovertime:break;
+		case GetHitVarCount:break;
+			temp1 = 0;
+			break;
+
+	}
+	
+	m_Stack.Push(temp1, "#");
 
 }
 
@@ -1265,12 +1335,13 @@ void CVirtualMachine::HitCount()
 
 void CVirtualMachine::HitFall()
 {
-    m_Stack.Push(0,"#");
+	//m_Stack.Push(1, "#");
+	m_Stack.Push(m_pPlayer2->GetHitVarData().fall, "#");
 }
 
 void CVirtualMachine::HitOver()
 {
-    m_Stack.Push(0,"#");
+    m_Stack.Push(m_pPlayer2->GetHitVarData().ground_hittime<0,"#");
 }
 
 void CVirtualMachine::HitPauseTime()
@@ -1280,7 +1351,7 @@ void CVirtualMachine::HitPauseTime()
 
 void CVirtualMachine::HitShakeOver()
 {
-     m_Stack.Push(0,"#");
+	m_Stack.Push(m_pPlayer2->GetHitVarData().hitshaketime == 0, "#");
 }
 
 //HitVel [component]
@@ -1316,7 +1387,7 @@ void CVirtualMachine::IfElse()
     PopValue();
     temp1=m_pop.Value;
     
-    if(temp1==1.0f)
+    if(temp1!=0)
         m_Stack.Push(temp2,"#");
     else
         m_Stack.Push(temp3,"#");
@@ -1347,15 +1418,13 @@ void CVirtualMachine::IsHomeTeam()
 //return the life of the player
 void CVirtualMachine::Life()
 {
-  //  m_Stack.Push((float)m_pPlayer1->PlRtInfo.nLife,"#");
-    
-
+    m_Stack.Push((float)m_pPlayer1->GetLife(),"#");
 }
 
 //return the max life
 void CVirtualMachine::LifeMax()
 {
-   //  m_Stack.Push((float)m_pPlayer1->myPlayerConst.PlayerData.nLife,"#");
+   m_Stack.Push((float)m_pPlayer1->GetConst().PlayerData.nLife,"#");
 }
 
 void CVirtualMachine::LogN()
@@ -1624,27 +1693,28 @@ void CVirtualMachine::PlayerIDExist()
 
 void CVirtualMachine::PrevStateNo()
 {
-   // m_Stack.Push((float)m_pPlayer1->PlRtInfo.nPrevState,"#");
+   m_Stack.Push((float)m_pPlayer1->GetPrevStateNo(),"#");
 }
 
 void CVirtualMachine::Pos()
 {
     //1 = X Value
-  /*  if(m_Stack.Pop().Value==1)
+    if(m_Stack.Pop().Value==1)
     {
-           m_Stack.Push(m_pPlayer1->PlRtInfo.x-XROOT,"#");
+		m_Stack.Push(m_pPlayer1->PosGetX(), "#");
     }//Else y value
-    else
+	else
     {
         //default
-        m_Stack.Push(m_pPlayer1->PlRtInfo.y,"#");
-    }*/
+        m_Stack.Push(m_pPlayer1->PosGetY(),"#");
+    }
 
 }
 
 void CVirtualMachine::Power()
 {
-  //  m_Stack.Push((float)m_pPlayer1->PlRtInfo.nLevelPower,"#");
+	//m_Stack.Push((float)1000, "#");
+  m_Stack.Push((float)m_pPlayer1->GetPower(),"#");
 }
 
 void CVirtualMachine::PowerMax()
@@ -1659,8 +1729,8 @@ void CVirtualMachine::ProjCancelTime()
 }
 void CVirtualMachine::Random()
 {
-  /*srand(1);
-  m_Stack.Push((float)rand(),"#");  */
+	
+  m_Stack.Push((float)(rand()%1000),"#"); 
 
 }
 
@@ -1712,16 +1782,16 @@ void CVirtualMachine::ScreenPos()
 
 void CVirtualMachine::SelfAnimExist()
 {
-   /* int nAnim;
+    int nAnim;
     PopValue();
     nAnim=(int)m_pop.Value;
     //If != NULL push true else push false
-    if(m_pPlayer1->m_AirManager.GetAction(nAnim) != NULL)
+    if(m_pPlayer1->GetAirAction(nAnim) != NULL)
         m_Stack.Push(1,"#");
     else
         m_Stack.Push(0,"#");
     
-*/
+
 }
 
 
@@ -1732,25 +1802,31 @@ void CVirtualMachine::Sin()
 
 void CVirtualMachine::StateNo()
 {
-    //m_Stack.Push((float)m_pPlayer1->PlRtInfo.nState,"#");
+    m_Stack.Push((float)m_pPlayer1->GetStateNo(),"#");
 }
 
 void CVirtualMachine::StateType()
 {
-  //  m_Stack.Push((float)m_pPlayer1->PlRtInfo.nStateTyp,"#");
+	m_Stack.Push((float)m_pPlayer1->GetStateType(), "#");
 }
 
 void CVirtualMachine::SysFVar()
 {
-    m_Stack.Pop();
-    m_Stack.Push(0,"#");
+	PopValue();
+	temp1 = m_pop.Value;
+
+	temp1 = m_pPlayer1->GetVar(CPN_sysfvar, temp1);
+	m_Stack.Push(temp1, "#");
 
 }
 
 void CVirtualMachine::SysVar()
 {
-    m_Stack.Pop();
-    m_Stack.Push(0,"#");
+	PopValue();
+	temp1 = m_pop.Value;
+
+	temp1 = m_pPlayer1->GetVar(CPN_sysvar, temp1);
+	m_Stack.Push(temp1, "#");
 
 }
 
@@ -1776,7 +1852,7 @@ void CVirtualMachine::TicksPerSecond()
 
 void CVirtualMachine::Time()
 {
-  //  m_Stack.Push(m_pPlayer1->PlRtInfo.nStateTime,"#");
+	m_Stack.Push((m_pPlayer1->GetTime()), "#");
 }
 
 void CVirtualMachine::UniqHitCount()
@@ -1786,23 +1862,30 @@ void CVirtualMachine::UniqHitCount()
 
 void CVirtualMachine::Var()
 {
-     m_Stack.Pop();
-     m_Stack.Push(1,"#");
+	PopValue();
+	temp1 = m_pop.Value;
+
+	temp1 = m_pPlayer1->GetVar(CPN_var, temp1);
+	m_Stack.Push(temp1, "#");
+
 }
 
 void CVirtualMachine::Vel()
 {
+	
     //1 = X Value
-   /* if(m_Stack.Pop().Value==1)
+	
+	PopValue();
+    if(m_pop.Value==1)
     {
-       m_Stack.Push(m_pPlayer1->PlRtInfo.xvel,"#");
+    m_Stack.Push(m_pPlayer1->VelGetX(),"#");
     }//Else y value
-    else
+	else
     {
         //default
-        m_Stack.Push(m_pPlayer1->PlRtInfo.xvel,"#");
-    }*/
-
+		m_Stack.Push(m_pPlayer1->VelGetY(), "#");
+    }
+	
 }
 
 void CVirtualMachine::Win()

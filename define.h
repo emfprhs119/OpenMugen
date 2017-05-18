@@ -2,7 +2,7 @@
 #define __DEFINE__H
 
 #define MAXCOMMAND 30
-
+#define STRFLAG(FLAG) #FLAG
 //
 const int INSPERTRIGGER = 40;
 const int INSPerConParam = 100;
@@ -45,9 +45,6 @@ enum KEY_NAMES
 	KEY_BUTTON_PAUSE,
 	KEY_COUNT
 };
-
-
-// 操作标识符
 enum OPCODES
 {
 	OP_PUSH=0,
@@ -80,8 +77,6 @@ enum OPCODES
 	OP_XOR,
 	OP_SQUARE,
 	OP_NEG,
-
-
 	OP_Abs,
 	OP_Acos,
 	OP_Alive,
@@ -102,6 +97,8 @@ enum OPCODES
 	OP_Const,
 	OP_Cos,
 	OP_Ctrl,
+	OP_ConstCoordinate,
+	OP_Const720pnonononono,
 	OP_DrawGame,
 	OP_E,
 	OP_Exp,
@@ -196,8 +193,240 @@ enum OPCODES
 	OP_STOP,
 
 };
+enum PARSERVAR
+{
+	P_F,
+	P_FF,
+	P_H,
+	P_HH,
+	P_U,
+	P_UU,
+	P_SS,
+	P_UH,
+	P_B,
+	P_BU,
+	P_BUU,
+	P_S
 
+};
+enum HITDEFVAR
+{
+	light=1,
+	medium,
+	hard,
+	back,
+	up,
+	diagup,
+	high,
+	low,
+	trip,
+	H_S,
+	H_C,
+	H_A,
+	H_N,
+	H_H,
+	H_L,
+	H_NA,
+	H_NT,
+	H_NP,
+	H_SA,
+	H_ST,
+	H_SP,
+	HA,
+	HT,
+	HP,
+	MA,
+	MAF,
+	E,
+	HIT,
+	MISS,
+	DODGE,
+	
+	HITDEFVARNUM
+};
+enum GetHitVarNum
+{
+	xveladd,
+	yveladd,
+	type,
+	animtype,
+	airtype,
+	groundtype,
+	damage,
+	hitcount,
+	fallcount,
+	hitshaketime,
+	hittime,
+	slidetime,
+	ctrltime,
+	recovertime,
+	xoff,
+	yoff,
+	zoff,
+	xvel,
+	yvel,
+	yaccel,
+	hitid,
+	chainid,
+	guarded,
+	fall,
+	fall_damage,
+	fall_xvel,
+	fall_yvel,
+	fall_recover,
+	fall_time,
+	fall_recovertime,
+	GetHitVarCount
+};
+static char * strGetHitVar[] = {
+	"xveladd",
+	"yveladd",
+	"type",
+	"animtype",
+	"airtype",
+	"groundtype",
+	"damage",
+	"hitcount",
+	"fallcount",
+	"hitshaketime",
+	"hittime",
+	"slidetime",
+	"ctrltime",
+	"recovertime",
+	"xoff",
+	"yoff",
+	"zoff",
+	"xvel",
+	"yvel",
+	"yaccel",
+	"hitid",
+	"chainid",
+	"guarded",
+	"fall",
+	"fall.damage",
+	"fall.xvel",
+	"fall.yvel",
+	"fall.recover",
+	"fall.time",
+	"fall.recovertime"
+};
+static char * strHitDefVar[] = {
+	"light",
+	"medium",
+	"hard",
+	"back",
+	"up",
+	"diagup",
+	"high",
+	"low",
+	"trip",
+	"S",
+	"C",
+	"A",
+	"N",
+	"H",
+	"L",
+	"NA",
+	"NT",
+	"NP",
+	"SA",
+	"ST",
+	"SP",
+	"HA",
+	"HT",
+	"HP",
+	"MA",
+	"MAF",
+	
+};
+static char * strFlag[] = {
+	"Intro",
+	"Invisible",
+	"RoundNotOver",
+	"NoBarDisplay",
+	"NoBG",
+	"NoFG",
+	"NoStandGuard",
+	"NoCrouchGuard",
+	"NoAirGuard",
+	"NoAutoTurn",
+	"NoJuggleCheck",
+	"NoKosnd",
+	"NoKoslow",
+	"NoShadow",
+	"GlobalNoShadow",
+	"NoMusic",
+	"NoWalk",
+	"TimerFreeze",
+	"UnGuardable",
+	0
+};
 
+static char * strConst[] = {
+	"data.life",
+	"data.attack",
+	"data.defence",
+	"data.fall.defence_mul",
+	"data.liedown.time",
+	"data.airjuggle",
+	"data.sparkno",
+	"data.guard.sparkno",
+	"data.KO.echo",
+	"data.IntPersistIndex",
+	"data.IntPersistIndex",
+	"size.xscale",
+	"size.yscale",
+	"size.ground.back",
+	"size.ground.front",
+	"size.air.back",
+	"size.air.front",
+	"size.attack.dist",
+	"size.proj.attack.dist",
+	"size.proj.doscale",
+	"size.head.pos.x",
+	"size.head.pos.y",
+	"size.mid.pos.x",
+	"size.mid.pos.y",
+	"size.size.shadowoffset",
+	"size.draw.offset.x",
+	"size.draw.offset.x",
+	"velocity.walk.fwd.x",
+	"velocity.walk.back.x",
+	"velocity.run.fwd.x",
+	"velocity.run.fwd.y",
+	"tmp---------",
+	"velocity.run.back.x",
+	"velocity.run.back.y",
+	"velocity.jump.neu.x",
+	"velocity.jump.back.x",
+	"velocity.jump.fwd.x",
+	"velocity.runjump.back.x",
+	"velocity.runjump.fwd.x",
+	"velocity.airjump.neu.x",
+	"velocity.airjump.back.x",
+	"velocity.airjump.fwd.x",
+	"movement.airjump.num",
+	"movement.airjump.height",
+	"movement.yaccel",
+	"movement.stand.friction",
+	"movement.crouch.friction",
+	"movement.stand.friction.threshold",
+	"movement.crouch.friction.threshold",
+	"velocity.jump.y",
+	"velocity.airjump.y",
+	"movement.air.gethit.groundlevel",
+	"movement.air.gethit.groundrecover.ground.threshold",
+	"movement.air.gethit.groundrecover.groundlevel",
+	"movement.air.gethit.airrecover.threshold",
+	"movement.air.gethit.airrecover.yaccel",
+	"movement.air.gethit.trip.groundlevel",
+	"down.bounce.offset.x",
+	"down.bounce.offset.y",
+	"down.bounce.yaccel",
+	"down.bounce.groundlevel",
+	"down.friction.threshold",
+	0
+};
 //All triggers       
 static char * strTriggerType[] = {
 	"Abs",
@@ -220,6 +449,8 @@ static char * strTriggerType[] = {
 	"Const",
 	"Cos",
 	"Ctrl",
+	"ConstCoordinate",
+	"Const720pnonono",
 	"DrawGame",
 	"E",
 	"Exp",
@@ -309,7 +540,7 @@ static char * strTriggerType[] = {
 	"Var",
 	"Vel",
 	"Win",
-	0,
+	0
 };
 
 // 游戏自定义变量
@@ -511,7 +742,11 @@ enum{
 };
 
 
-
+enum SNDFLAG{
+	FIGHT,
+	COMMON,
+	PLAYER
+};
 // control中设置的属性枚举，相关的是一个表达式，不直接赋值
 enum ConParmName
 {
@@ -521,6 +756,42 @@ enum ConParmName
 	CPN_ctrl,
 	CPN_x,
 	CPN_y,
+	CPN_flag,
+	CPN_var,
+	CPN_sysvar,
+	CPN_fvar,
+	CPN_sysfvar,
+	CPN_pos,
+	CPN_sprpriority,
+	/*volum*/
+	CPN_volumescale,
+	CPN_channel,
+	CPN_lowpriority,
+	CPN_freqmul,
+	CPN_loop,
+	CPN_pan,
+	CPN_abspan
+};
+enum ASSERTSPECIAL{
+	intro=1,
+	invisible=2,
+	roundnotover=4,
+	nobardisplay=8,
+	noBG=16,
+	noFG=32,
+	nostandguard=64,
+	nocrouchguard=128,
+	noairguard=256,
+	noautoturn=512,
+	nojugglecheck=1024,
+	nokosnd=2048,
+	nokoslow=4096,
+	noshadow=8192,
+	globalnoshadow=16384,
+	nomusic=32768,
+	nowalk=65536,
+	timerfreeze=131072,
+	unguardable=262144
 };
 
 // control HItDef中设置的属性枚举，相关的是一个表达式，不直接赋值
@@ -543,6 +814,7 @@ enum CONTROLHITDEFParmName
 	CHD_hitsound,
 	CHD_guardsound,
 	CHD_ground_type,
+	CHD_guard_type,
 	CHD_air_type,
 	CHD_ground_slidetime,
 	CHD_guard_slidetime,

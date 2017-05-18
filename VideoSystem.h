@@ -23,9 +23,9 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
-const int SCREENX_LIMIT = 319;
-const int SCREENY_LIMIT = 239;
-const int XMAX = 320;
+//const int SCREENX_LIMIT = 479;
+//const int SCREENY_LIMIT = 319;
+const int XMAX = 640;
 const int YMAX = 240;
 
 class CVideoSystem
@@ -50,6 +50,7 @@ u16  MapRGB(Uint8  red,Uint8  green,Uint8  blue);
 
 //normal Blt
 void NormalBlt(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask);
+void NormalBltScale(SFFSPRITE *lpSprite, s16 x, s16 y,float scale, bool bMask);
 void NormalFlipH(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask);
 void NormalFlipV(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask);
 void NormalFlipHV(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask);
@@ -63,6 +64,7 @@ void NormalFlipHV(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask);
 private:
     SDL_Surface *screen;
     SDL_Surface *work;
+	SDL_Surface *work2x;
     SDL_Surface *font;
     
     Uint8* deltaPtr;

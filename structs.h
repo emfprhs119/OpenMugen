@@ -54,6 +54,7 @@ struct PLCOMMAND
 	PLCOMMANDELEMENT nCommand[MAXCOMMAND];
 	Uint8 nHowManyCommand;
 	Uint8 nCommandTime, nBufferTime;
+	Uint8 num;
 	char strCommand[255];
 
 };
@@ -62,7 +63,7 @@ struct PLCOMMAND
 //Movedata Struct for Saving the current Button States
 struct KEYBOARDDATA
 {
-	KEYELEMENT keyInfo[ KEY_COUNT ];
+	KEYELEMENT keyInfo[KEY_COUNT];
 	bool bKeyBoard;
 };
 
@@ -72,7 +73,7 @@ struct MEMLIST
 {
 	u8    nType;
 	size_t   nSize;
-	void *adrress;    
+	void *adrress;
 
 };
 
@@ -91,9 +92,9 @@ struct PCXHEADER
 	u8 Version;
 	u8 Encoding;
 	u8 BPP;
-	u16 x,y;
-	u16 widht,height;
-	u16 HRES,VRES;
+	u16 x, y;
+	u16 widht, height;
+	u16 HRES, VRES;
 	u8 ColorMap[48];
 	u8 reserved;
 	u8 NPlanes;
@@ -154,6 +155,22 @@ struct SNDSUBHEADER
 	s32  SampleNumber;
 
 };
+struct SNDDATA
+{
+	s32  nGroupNumber;
+	s32  SampleNumber;
+	Uint32 wav_length; // length of our sample
+	Uint8 *wav_buffer; // buffer containing our audio file
+	SDL_AudioSpec wav_spec; // the specs of our piece of music
+	Mix_Chunk *chunk;
+	SDL_AudioCVT cvt;
+
+};
+struct SND
+{
+	u8 nNumberOfSounds;
+	SNDDATA *data;
+};
 
 struct RGBColor
 {
@@ -185,8 +202,7 @@ struct SFFSPRITE
 struct Stacktype
 {
 	float Value;
-	char string[50]; 
-	// 扩展字段，用于方向键是否按下，尚待支持
+	char string[50];
 	//char stringEx[50];
 
 };
@@ -195,12 +211,17 @@ struct Stacktype
 struct XYVALUE
 {
 	float x;
-	float y;          
+	float y;
 };
-
+struct RGB
+{
+	int r;
+	int g;
+	int b;
+};
 // 操作堆栈的元素
 struct INSTRUCTION
-{   
+{
 	Uint16 n_OpCode;
 	float Value;
 	char *strValue;
@@ -210,6 +231,7 @@ struct INSTRUCTION
 struct PLTRIGGER
 {
 	u8 nTriggerType;
+	int triggNum;
 	INSTRUCTION* pInts;
 
 };
@@ -218,18 +240,36 @@ struct PLTRIGGER
 struct CONTROLLERPARAMS
 {
 	ConParmName nParam;
+	SNDFLAG flag = PLAYER;
+	u8 vNum;
+	u8 vNum1;
+	s8 sNum;
+	bool bVar;
 	//TODO:动态生成内存
 	INSTRUCTION pInts[INSPerConParam];
 };
 
 // HitDef 保存的值
+
+struct HITDEFVARSET
+{
+	HITDEFVAR hVar1, hVar2;
+	SNDFLAG flag=FIGHT;
+	bool bVar1 = 0;
+	u16 uVar1 = 0, uVar2 = 0, uVar3 = 0;
+	s16 sVar1 = 0, sVar2 = 0, sVar3 = 0;
+	float fVar1 = 0, fVar2 = 0;
+	char* strVar1;
+};
+
 struct CONTROLHITDEF
 {
 	CONTROLHITDEFParmName nParam;
 	//TODO:动态生成内存
 	INSTRUCTION pInts[INSPerConParam];
-};
+	HITDEFVARSET pHitVar;
 
+};
 // TODO control中的执行语句只有这三个是表达式，其他的都是数值，为保险还是用CONTROLLERPARAMS统一保存
 //struct CHANGESTATE
 //{
@@ -238,6 +278,101 @@ struct CONTROLHITDEF
 //	INSTRUCTION *anim;
 //
 //};
+struct HITVARDATA{
+	bool def = false;
+	bool reset = false;
+	HITDEFVAR animtype;
+
+	HITDEFVAR attr1;
+	HITDEFVAR attr2;
+	HITDEFVAR hitflag = MAF;
+	HITDEFVAR guardflag;
+	HITDEFVAR affectteam = E;
+	HITDEFVAR air_animtype;
+	HITDEFVAR fall_animtype = back;
+	u8 hit_prior = 4;
+	HITDEFVAR hit_type = HIT;
+	s8 hit_damage = 0;
+	s8 guard_damage = 0;
+	u8	pausetime = 0;
+	u8 hitshaketime = 0;
+	u8 guard_pausetime = 0;
+	int sparkno;
+	int guard_sparkno;
+	XYVALUE sparkxy;
+	int hitsound_snd_grp;
+	int hitsound_snd_item;
+	SNDFLAG hitsound_snd_flag;
+	int guardsound_snd_grp;
+	int guardsound_snd_item;
+	HITDEFVAR ground_type = high;
+	HITDEFVAR air_type = high;
+	int ground_slidetime = 0;
+	int guard_slidetime = 0;
+	int ground_hittime = 0;
+	int guard_hittime = 0;
+	int air_hittime = 20;
+	int guard_ctrltime;
+	int guard_dist;
+	float  yaccel = 1.4;
+	XYVALUE ground_velocity;
+	float guard_velocity;
+	XYVALUE air_velocity;
+	XYVALUE airguard_velocity;
+	float ground_cornerpush_veloff;
+	float air_cornerpush_veloff;
+	float down_cornerpush_veloff;
+	float guard_cornerpush_veloff;
+	float airguard_cornerpush_veloff;
+	int airguard_ctrltime;
+	int  juggle_points;
+	XYVALUE mindist;
+	XYVALUE maxdist;
+	XYVALUE snap;
+	int p1sprpriority;
+	int p2sprpriority;
+	int p1facing;
+	int p1getp2facing;
+	int p2facing;
+	int p1stateno;
+	int p2stateno;
+	bool p2getp1state;
+	bool forcestand;
+	bool fall;
+	float fall_xvelocity;
+	float fall_yvelocity;
+	bool fall_recover;
+	int fall_recovertime;
+	int fall_damage;
+	bool air_fall;
+	bool forcenofall;
+	XYVALUE down_velocity;
+	int down_hittime;
+	bool down_bounce;
+	int id;
+	int chainID;
+	int nochainID;
+	bool hitonce;
+	bool kill;
+	bool guard_kill;
+	bool fall_kill;
+	int numhits;
+	int p1power;
+	int p1gpower;
+	int p2power;
+	int p2gpower;
+	int palfx_time;
+	RGB palfx_mul;
+	RGB palfx_add;
+	int envshake_time;
+	float envshake_freq;
+	int envshake_ampl;
+	float envshake_phase;
+	int fall_envshake_time;
+	float fall_envshake_freq;
+	int fall_envshake_ampl;
+	float fall_envshake_phase;
+};
 
 struct PLSTATE
 {
@@ -246,6 +381,8 @@ struct PLSTATE
 	u16 nType;
 	PLTRIGGER *triggers;
 	u16 nHowManyTriggers;
+	PLTRIGGER *triggerAlls;
+	u16 nHowManyTriggerAlls;
 
 	bool bPresist;
 	bool bIgnorPause;
@@ -293,10 +430,10 @@ struct PLSTATEDEF
 
 struct ClsnRECT
 {
-	s16 x,y;
-	s16 h,w;
-
+	s16 x, y;
+	s16 h, w;
 };
+
 //Clsn Struct to hold one Clns Rectangle with type
 struct Clsn
 {
@@ -304,6 +441,7 @@ struct Clsn
 	ClsnRECT ClsnRect;
 
 };
+
 //Element Strcut to save one Elment of an Action Block
 struct Element
 {
@@ -314,8 +452,10 @@ struct Element
 	u32 nDuringTime;
 	u16 FlipFlags;
 	u32 ColorFlags;
-	Clsn *pClnsData;
-	u16 nNumberOfClsn;
+	Clsn *pClsn1Data;
+	Clsn *pClsn2Data;
+	u16 nNumberOfClsn1;
+	u16 nNumberOfClsn2;
 };
 
 //Action Element to hold one Action Block with its Elements
@@ -342,6 +482,7 @@ struct PLDATA
 	s16 nLife;
 	s16 nAttack;
 	s16 nDefence;
+	s16 nPower;
 	s16 nFallDefenceUp;
 	s16 nLieDownTime;
 	s16 nAirjuggle;
@@ -394,11 +535,24 @@ struct PLAYERVELOCITY
 //Playermovement Struct
 struct PLAYERMOVEMENT
 {
-	s16 AirJumpNum;
-	s16 nAirJumpHight;
-	float yaccel;
-	float StandFriction;
-	float CrouchFriction;
+	s16 AirJumpNum=1;
+	s16 nAirJumpHight=140;
+	float yaccel=1.76;
+	float StandFriction=.85;
+	float CrouchFriction=.82;
+	float StandFrictionThreshold=8;
+	float CrouchFrictionThreshold=.2;
+	//float DownFrictionThreshold;
+	float air_gethit_groundlevel = 100;
+	float air_gethit_groundrecover_ground_threshold = -80;
+	float air_gethit_groundrecover_groundlevel = 40;
+	float air_gethit_airrecover_threshold = -4;
+	float air_gethit_airrecover_yaccel = 1.4;
+	float air_gethit_trip_groundlevel = 60;
+	XYVALUE down_bounce_offset = XYVALUE{ 0, 80 };
+	float down_bounce_yaccel = 1.6;
+	float down_bounce_groundlevel = 48;
+	float down_friction_threshold = .2;
 
 };
 //Playerconstant struct
@@ -412,14 +566,31 @@ struct PLAYERCONST
 
 };
 
-
-
+struct CharFileInfo
+{
+	char name[40];
+	char displayname[40];
+	char versiondate[15];
+	char mugenversion[5];
+	char author[40];
+	int pal_defaults[4];
+	XYVALUE localcoord;
+	char cmd[40];
+	char cns[40];
+	char st[40];
+	char stcommon[40];
+	char sprite[40];
+	char anim[40];
+	char sound[40];
+	char ai[40];
+	char pal[12][40];
+};
 
 class CError
 {
-	char strMessage[100];      
+	char strMessage[100];
 public:
-	CError(const char* strError,...)
+	CError(const char* strError, ...)
 	{
 
 		char string[100];                  // Temporary string
@@ -427,12 +598,12 @@ public:
 		va_list ap;                // Pointer To List Of Arguments
 		va_start(ap, strError);         // Parses The String For Variables
 		vsprintf(string, strError, ap); // Converts Symbols To Actual Numbers
-		va_end(ap);      
+		va_end(ap);
 
-		strcpy(strMessage,string);
+		strcpy(strMessage, string);
 
 	}
-	const char *GetError(){return strMessage;}     
+	const char *GetError(){ return strMessage; }
 };
 
 

@@ -76,6 +76,8 @@ char *strOpCode[] =
 	"OP_Const",
 	"OP_Cos",
 	"OP_Ctrl",
+	"temp",
+	"temp1",
 	"OP_DrawGame",
 	"OP_EOP",
 	"OP_Exp",
@@ -167,6 +169,7 @@ char *strOpCode[] =
 	"OP_Win",
 	"OP_MOD",
 	"OP_NOP",
+	"OP_STOP"
 
 
 };
@@ -190,6 +193,8 @@ void CStateManager::Reset()
 	nCurrInst=0;
 	lpStateDefList=(PLSTATEDEF*)m_pAlloc->Alloc(sizeof(PLSTATEDEF)*nTotalStateDefSize);
 	nCurrTrigger=0;
+	nCurrTriggerAll=0;
+	
 }
 
 void CStateManager::ReallocStatedef(u16 index)
@@ -200,6 +205,8 @@ void CStateManager::ReallocStatedef(u16 index)
 	{
 		lpStateDefList[index].lpState[i].triggers=(PLTRIGGER*)m_pAlloc->Realloc(lpStateDefList[index].lpState[i].triggers,
 			sizeof(PLTRIGGER)*lpStateDefList[index].lpState[i].nHowManyTriggers);
+		lpStateDefList[index].lpState[i].triggerAlls = (PLTRIGGER*)m_pAlloc->Realloc(lpStateDefList[index].lpState[i].triggerAlls,
+			sizeof(PLTRIGGER)*lpStateDefList[index].lpState[i].nHowManyTriggerAlls);
 	}
 }
 
@@ -248,7 +255,7 @@ void CStateManager::AddStateDef(s32 nStateDefNum)
 
 	nTotalState=0;
 
-	nTotalStateSize=100;
+	nTotalStateSize=5;
 	lpStateDefList[nTotalStateDef].lpState=(PLSTATE*)m_pAlloc->Alloc(sizeof(PLSTATE)*nTotalStateSize);
 
 	nTotalStateDef++;
@@ -347,18 +354,21 @@ void CStateManager::AddState(s32 nStateNum,char* strSomeNumber)
 	if(nTotalState > nTotalStateSize-1)
 	{
 
-		nTotalStateSize+=100;
+		nTotalStateSize+=5;
 
-		lpStateDefList[nTotalStateDef-1].lpState = (PLSTATE*)m_pAlloc->Realloc(lpStateDefList[nTotalStateDef].lpState,
+		lpStateDefList[nTotalStateDef-1].lpState = (PLSTATE*)m_pAlloc->Realloc(lpStateDefList[nTotalStateDef-1].lpState,
 			sizeof(PLSTATE)*nTotalStateSize);
 	}
 
 	lpStateDefList[nTotalStateDef-1].lpState[nTotalState].nStateNumber=nStateNum;
 	lpStateDefList[nTotalStateDef-1].lpState[nTotalState].nParamCount = 0;
+	lpStateDefList[nTotalStateDef - 1].lpState[nTotalState].nParamHDCount = 0;
 	nCurrTrigger=0;
+	nCurrTriggerAll = 0;
 	nTriggerListSize=100;
 
 	lpStateDefList[nTotalStateDef-1].lpState[nTotalState].triggers=(PLTRIGGER*)m_pAlloc->Alloc(sizeof(PLTRIGGER)*nTriggerListSize);
+	lpStateDefList[nTotalStateDef - 1].lpState[nTotalState].triggerAlls = (PLTRIGGER*)m_pAlloc->Alloc(sizeof(PLTRIGGER)*nTriggerListSize);
 
 	nTotalState++;
 	lpStateDefList[nTotalStateDef-1].nHowManyState=nTotalState;
@@ -394,7 +404,7 @@ void CStateManager::CleanUp()
 //Add Instruction to currrent trigger
 void CStateManager::AddInstruction(Uint16 nOpCode,float value,const char *strValue)
 {
-	PrintMessage("AddInstruction = command:%s value:%f str:%s",strOpCode[nOpCode],value,strValue,nOpCode);
+	PrintMessage("AddInstruction = command:%s op:%d value:%f str:%s", strOpCode[nOpCode], nOpCode, value, strValue, nOpCode);
 
 	pInst[nCurrInst].n_OpCode=nOpCode;
 	pInst[nCurrInst].Value=value;
@@ -413,7 +423,30 @@ void CStateManager::AddInstruction(Uint16 nOpCode,float value,const char *strVal
 
 }
 //Increase the index of the current trigger ref
-void CStateManager::AddTriggerToState(u8 nType)
+void CStateManager::AddTriggerAllToState(u8 nType)
+{
+
+	if (nCurrTriggerAll > nTriggerListSize)
+		PrintMessage("CStateManager::What the hell are you doing with 100 triggers!!!!(Error)");
+
+	//First lets copy the instruction to the trigger
+	//Create a new instance to store the instruction
+
+	lpStateDefList[nTotalStateDef - 1].lpState[nTotalState - 1].triggerAlls[nCurrTriggerAll].nTriggerType = nType;
+	lpStateDefList[nTotalStateDef - 1].lpState[nTotalState - 1].triggerAlls[nCurrTriggerAll].pInts = (INSTRUCTION*)m_pAlloc->Alloc(sizeof(INSTRUCTION)* nCurrInst);
+	memcpy(lpStateDefList[nTotalStateDef - 1].lpState[nTotalState - 1].triggerAlls[nCurrTriggerAll].pInts,
+		pInst, sizeof(INSTRUCTION)*nCurrInst);
+
+	nCurrTriggerAll++;
+
+	lpStateDefList[nTotalStateDef - 1].lpState[nTotalState - 1].nHowManyTriggerAlls = nCurrTriggerAll;
+
+	nCurrInst = 0;
+
+
+}
+
+void CStateManager::AddTriggerToState(int triggNum,u8 nType)
 {   
 
 	if(nCurrTrigger > nTriggerListSize)
@@ -424,7 +457,7 @@ void CStateManager::AddTriggerToState(u8 nType)
 
 	lpStateDefList[nTotalStateDef-1].lpState[nTotalState-1].triggers[nCurrTrigger].nTriggerType=nType;
 	lpStateDefList[nTotalStateDef-1].lpState[nTotalState-1].triggers[nCurrTrigger].pInts=(INSTRUCTION*)m_pAlloc->Alloc(sizeof(INSTRUCTION)* nCurrInst);
-
+	lpStateDefList[nTotalStateDef - 1].lpState[nTotalState - 1].triggers[nCurrTrigger].triggNum = triggNum;
 	memcpy(lpStateDefList[nTotalStateDef-1].lpState[nTotalState-1].triggers[nCurrTrigger].pInts,
 		pInst,sizeof(INSTRUCTION)*nCurrInst);
 
@@ -450,17 +483,41 @@ void CStateManager::SetParam(ConParmName nParam)
 	memcpy(curState->pConParm[curState->nParamCount].pInts, pInst,sizeof(INSTRUCTION)*nCurrInst);
 	curState->nParamCount++;
 }
+void CStateManager::SetParamNum(ConParmName nParam, u8 num, u8 num1,SNDFLAG flag)
+{
+	this->AddInstruction(OP_STOP, 0, "OP_STOP");
+	PLSTATE *curState = &(lpStateDefList[nTotalStateDef - 1].lpState[nTotalState - 1]);
+	curState->pConParm[curState->nParamCount].nParam = nParam;
+	curState->pConParm[curState->nParamCount].vNum = num;
+	curState->pConParm[curState->nParamCount].vNum1 = num1;
+	curState->pConParm[curState->nParamCount].flag = flag;
+	// 当前的exprcopy到pararm里面
+	memcpy(curState->pConParm[curState->nParamCount].pInts, pInst, sizeof(INSTRUCTION)*nCurrInst);
+	curState->nParamCount++;
+}
+void CStateManager::SetParamNum(ConParmName nParam,s8 num)
+{
+	this->AddInstruction(OP_STOP, 0, "OP_STOP");
+	PLSTATE *curState = &(lpStateDefList[nTotalStateDef - 1].lpState[nTotalState - 1]);
+	curState->pConParm[curState->nParamCount].nParam = nParam;
+	curState->pConParm[curState->nParamCount].sNum = num;
+	// 当前的exprcopy到pararm里面
+	memcpy(curState->pConParm[curState->nParamCount].pInts, pInst, sizeof(INSTRUCTION)*nCurrInst);
+	curState->nParamCount++;
+}
 
 //set the HITDEF param value
-void CStateManager::SetHDParam(CONTROLHITDEFParmName nParam)
+void CStateManager::SetHDParam(CONTROLHITDEFParmName nParam, HITDEFVARSET set)
 {
 	// PrintMessage("%i param",nParam);
 	// 添加结束
 	this->AddInstruction(OP_STOP,0,"OP_STOP");
 	PLSTATE *curState = &(lpStateDefList[nTotalStateDef-1].lpState[nTotalState-1]);
-	curState->pConHDParm[curState->nParamHDCount].nParam = nParam;
+	curState->pConHDParm[curState->nParamCount].nParam = nParam;
+
 	// 当前的exprcopy到pararm里面
-	memcpy(curState->pConHDParm[curState->nParamHDCount].pInts, pInst,sizeof(INSTRUCTION)*nCurrInst);
+	//memcpy(curState->pConHDParm[curState->nParamHDCount].pInts, pInst,sizeof(INSTRUCTION)*nCurrInst);
+	curState->pConHDParm[curState->nParamCount].pHitVar = set;
 	curState->nParamCount++;
 }
 

@@ -1,0 +1,15 @@
+updates for final version(v2) from final version(v1)
+
+first and mainly i've changed out her spells (fire,ice,lightning) with
+better looking ones
+
+i've made the crush sword unguardable
+
+fixed the charging combo move, now it puts p2 at right position when it hits
+
+adjusted some of the damage, mainly the spells and stasis sword when in a combo
+
+and a few other minor adjustments.
+
+enjoy!!!
+

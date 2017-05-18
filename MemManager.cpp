@@ -66,10 +66,14 @@ void* CAllocater::Alloc(size_t nSize,int nMemInit)
           PrintMessage("CAllocater::no free block found"); 
        
       lpMemList[i].nType=ALLOC;
+	  if (nSize > 8000000)
+		  printf("");
       lpMemList[i].adrress=malloc(nSize);
       
-      if(lpMemList[i].adrress==0)
-         PrintMessage("CAllocater::malloc failed");                        
+	  if (lpMemList[i].adrress == 0){
+		  lpMemList[i].adrress = malloc(nSize);
+		  PrintMessage("CAllocater::malloc failed");
+	  }
       
       memset(lpMemList[i].adrress,0,nSize);
       lpMemList[i].nSize=nSize;

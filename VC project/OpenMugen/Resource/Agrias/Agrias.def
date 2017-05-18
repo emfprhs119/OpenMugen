@@ -1,0 +1,46 @@
+;***************************************************************************;
+;******************* Created in Fighter Factory Ultimate *******************;
+;*******************      http://www.virtualltek.com     *******************;
+;***************************************************************************;
+
+[Info]
+name = "AgriasOaks"
+displayname = "Agrias"
+versiondate = 12/16/2012
+mugenversion = 1.0
+author = "kainintherain"
+pal.defaults = 1,2,3
+
+[Files]
+sprite = AgriasOaks.sff
+anim = AgriasOaks.air
+sound = AgriasOaks.snd
+;cmd = AgriasOaks-easyAI.cmd
+;cmd = AgriasOaks-normalAI.cmd
+cmd = AgriasOaks-hardAI.cmd
+cns = AgriasOaks.cns
+stcommon = common1.cns
+st = AgriasOaks.cns
+st1 = -2.st
+st2 = -3.st
+st3 = OverRide.cns
+st4 = system.st
+st5 = attack.st
+st6 = skill.st
+st7 = specialskill.st
+pal1 = AgriasOaks.act
+pal2 = white.act
+pal3 = black.act
+pal4 = AgriasOaks.act
+pal5 = white.act
+pal6 = black.act
+pal7 = AgriasOaks.act
+pal8 = white.act
+pal9 = black.act
+pal10 = AgriasOaks.act
+pal11 = white.act
+pal12 = black.act
+
+[Arcade]
+intro.storyboard = 
+ending.storyboard = 

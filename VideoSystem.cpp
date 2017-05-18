@@ -52,7 +52,7 @@ bool CVideoSystem::InitSystem()
 {
     PrintMessage("CVideoSystem::InitSystem()");
      //Set Video mode and get main Surface   
-    screen=SDL_SetVideoMode(320,240,16,SDL_SWSURFACE|SDL_DOUBLEBUF);
+    screen=SDL_SetVideoMode(XMAX*2,YMAX*2,16,SDL_SWSURFACE|SDL_DOUBLEBUF);
     //Check the surface for validate
     if(screen==NULL)
     {
@@ -64,8 +64,10 @@ bool CVideoSystem::InitSystem()
     SDL_WM_SetCaption(OMTITLE,NULL);
     
     //Create the work surface
-    work=CreateSurface(320,240);
-    SDL_FillRect(work,NULL,SDL_MapRGB(screen->format,255,0,255));
+	work = CreateSurface(XMAX, YMAX);
+    SDL_FillRect(work,NULL,SDL_MapRGB(screen->format,255,255,255));
+	work2x = CreateSurface(XMAX*2, YMAX*2);
+	//SDL_FillRect(work, NULL, SDL_MapRGB(screen->format, 255, 255, 255));
         
     //Set the frame manager to 60 Hz
     SDL_initFramerate(&m_FPSmanager);
@@ -130,11 +132,11 @@ void CVideoSystem::Draw()
     }
     DrawText(0,0,"%2.2f FPS",nFps);
          
-    //FilterImage();
+    FilterImage();
     
-  //  scale2x(work,screen);
-    
-    SDL_BlitSurface(work,NULL,screen,NULL);
+	scale2x(work, work2x);
+	//shift(work2x, x);
+	SDL_BlitSurface(work2x, NULL, screen, NULL);
     
     SDL_Flip(screen);
     
@@ -365,6 +367,91 @@ void CVideoSystem::NormalBlt(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask)
          
          
      }
+
+}
+void CVideoSystem::NormalBltScale(SFFSPRITE *lpSprite, s16 x, s16 y,float scale, bool bMask)
+{
+	u16 *lpWorkData;
+	u16 pitch;
+	s16 width = lpSprite->PcxHeader.widht*scale;
+	s16 height = lpSprite->PcxHeader.height*scale;
+	u8* byData = lpSprite->byPcxFile;
+	u16 *ColorTable = lpSprite->ColorPallet;
+
+	//calculate x and y value
+	y -= height - (height - lpSprite->y);
+	x -= width - (width - lpSprite->x);
+
+	lpWorkData = (u16*)work->pixels;
+	pitch = work->pitch / 2;
+
+	u16 yClip = 0;
+	u16 yClip2 = 0;
+	u16 xClip = 0;
+	u16 xClip2 = 0;
+
+
+	if (x + width > XMAX)
+	{
+		width -= x + width - XMAX;
+	}
+
+	if (x<0)
+	{
+		xClip = -x;
+		x = 0;
+	}
+
+
+	if (y + height >YMAX)
+		height -= y + height - YMAX;
+
+	if (y<0)
+	{
+		yClip = -y;
+		y = 0;
+	}
+
+	lpWorkData += y*pitch;
+	lpWorkData += x;
+
+	if (!bMask)
+	{
+
+		for (int i = yClip; i<height; i++)
+		{
+
+			for (int j = xClip; j<width; j++)
+			{
+				*lpWorkData = ColorTable[byData[j + i*lpSprite->PcxHeader.widht]];
+				lpWorkData++;
+
+			}
+			lpWorkData -= width - xClip;
+			lpWorkData += pitch;
+
+		}
+
+	}
+	else
+	{
+		for (int i = yClip; i<height; i++)
+		{
+
+			for (int j = xClip; j<width; j++)
+			{
+				if (byData[(int)(j / scale) + (int)(i / scale)*lpSprite->PcxHeader.widht] != byData[0])
+					*lpWorkData = ColorTable[byData[(int)(j / scale) + (int)(i / scale) * lpSprite->PcxHeader.widht]];
+				lpWorkData++;
+
+			}
+			lpWorkData -= width - xClip;
+			lpWorkData += pitch;
+
+		}
+
+
+	}
 
 }
 

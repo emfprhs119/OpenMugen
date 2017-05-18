@@ -75,6 +75,9 @@
     <ClCompile Include="..\..\VM.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\SndManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\AirManager.h">
@@ -138,6 +141,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\define.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SndManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

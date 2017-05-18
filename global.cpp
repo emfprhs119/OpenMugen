@@ -5,6 +5,10 @@ FILE *pLogFile=NULL;
 
 void PrintMessage(char *str,...)
 {
+
+//#define DEBUG
+#ifdef DEBUG
+
   char string[255];                  // Temporary string
 
   va_list ap;                // Pointer To List Of Arguments
@@ -22,10 +26,9 @@ void PrintMessage(char *str,...)
   fprintf(pLogFile,"\n");
   fclose(pLogFile);
   
-   
-  printf(string);
-  printf("\n");
-
+//printf(string);
+  //printf("\n");
+#endif // DEBUG
 }
 
 

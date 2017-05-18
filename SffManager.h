@@ -5,13 +5,16 @@ class CSffManager
 {
 private:
   bool           bPalletLoaded;
+  bool next=true;
   FILE           *lpSffFile;
 //need pointer to classes
   CVideoSystem   *m_pVideoSystem;
   CAllocater     *m_pAlloc;
   CGameTimer     *m_pTimer;
+ 
   CAirManager    *m_pAirManger;
   //global color pallet    
+
   u16            ColorPallet[256];
   u16            nTotalImages;
   u16            nCurrImage;
@@ -22,10 +25,12 @@ private:
   //decode the PCX file by run lenght 
   u8* DecodePcx(u8* PcxByte,PCXHEADER header);
   int FindSprite(s16 nGroupNumber,s16 nImageNumber);
+  
   void DecodeSffFile();
   float xScaleValue,yScaleValue; 
   //hold the current Animation
-   ActionElement *Anim;          
+   ActionElement *Anim;  
+   ActionElement *SparkAnim;
 public:
 enum BLTFLAGS
 {
@@ -47,18 +52,19 @@ enum BLTFLAGS
     ActionElement *GetCurrAnimation(){return Anim;}
     
     //Set the blt flags to chose wich blt operation should used
-    void SetBltFlags(u16 nFlag){nFlags=nFlag;}
-    
-    void SetPointers(CVideoSystem* p,CAllocater *a,CGameTimer *t,CAirManager *air);
+	void SetBltFlags(u16 nFlag){ nFlags = nFlag; };
+	void ReduceCurrTime(){ Anim->nCurrTime--; if (Anim->nCurrentImage>0)Anim->nCurrentImage--; Anim->nDuringTime = m_pTimer->GetGameTime() + Anim->AnimationElement[Anim->nCurrentImage].nDuringTime; };
+	CGameTimer* GetGameTimer(){ return m_pTimer; };
+	void SetPointers(CVideoSystem* p,CAllocater *a,CGameTimer *t,CAirManager *air);
     bool LoadSffFile(const char *strSffFile);
     bool LoadActToSff(const char *strActFile);
     //x and y value are the axis value not the left corner of the image
     void BlitSprite(s16 nGroupNumber,s16 nImageNumber,s16 x, s16 y);
-    void BlitAnim(s16 x, s16 y);
-    void PrepareAnim(s32 nAnim);
+    void BlitAnim(s16 x, s16 y,bool spark=false);
+	void SetNext(bool b){ next = b; };
+	void PrepareAnim(s32 nAnim, bool spark = false);
     void ResetManager();
     void FreeManager();
-      
 };
 
 #endif

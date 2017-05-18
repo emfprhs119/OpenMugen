@@ -18,9 +18,10 @@ CCmdManager::~CCmdManager()
     delete []m_Commands;
     delete m_KeyBuffer;
 }
-
-bool CCmdManager::LoadCMDFile( const char* file )
+bool CCmdManager::LoadCMDFile( const char* file ,CAllocater *a)
 {
+	m_pAlloc = a;
+	b_CurrCommand = (bool *)m_pAlloc->Alloc(sizeof(bool)* 200);
     int defaultCommandTime = 15;
     int defaultBufferTime = 1;
     
@@ -37,6 +38,7 @@ bool CCmdManager::LoadCMDFile( const char* file )
     // get count first to set up memory        
     while( !tok.AtEndOfFile() )
     {
+		
         bool foundSomething = false;
         if( tok.CheckToken( "command.time" ) )
         {
@@ -86,7 +88,8 @@ bool CCmdManager::LoadCMDFile( const char* file )
  
     m_Commands = new PLCOMMAND[ m_CommandCount ];
     PLCOMMAND* command = m_Commands;
-    
+	int num = 0;
+
     while( !tok.AtEndOfFile() )
     {
         bool foundCommand = false;
@@ -103,6 +106,7 @@ bool CCmdManager::LoadCMDFile( const char* file )
                 command->nBufferTime = defaultBufferTime;
                 command->strCommand[0] = 0;
                 command->nHowManyCommand = 0;
+				
                 
                 while( command->nHowManyCommand < MAXCOMMAND && !tok.CheckToken( "[", false ) && !tok.AtEndOfFile() )
                 {
@@ -111,8 +115,13 @@ bool CCmdManager::LoadCMDFile( const char* file )
                         if( !tok.CheckToken( "=" ) )
                         {
                         }
-                        
-                        strcpy( command->strCommand, tok.GetToken() );                    
+						const char* str = tok.GetToken();
+						command->num = num;
+						for (int i=1; i <= num; i++){
+							if (strcmp((command-i)->strCommand,str)==0)
+								command->num = num-i;
+						}
+						strcpy(command->strCommand, str);
                     }
                     else if( tok.CheckToken( "command" ) )
                     {
@@ -120,8 +129,8 @@ bool CCmdManager::LoadCMDFile( const char* file )
                         {
                         } 
                         
-                        while( !tok.AtEndOfLine() )
-                        {
+						while (!tok.AtEndOfLine() || tok.IsNextToken())
+						{
                             const char* token = tok.GetToken();
                            
                             if( !strcmp( token, "~" ) )
@@ -243,7 +252,7 @@ bool CCmdManager::LoadCMDFile( const char* file )
                         command->nBufferTime = tok.GetInt();
                     }
                 }
-                                
+				num++;
                 command++;                
             }
         } 
@@ -254,9 +263,9 @@ bool CCmdManager::LoadCMDFile( const char* file )
     tok.CloseFile();
     return true;
 }
-
 void CCmdManager::Update( KEYBOARDDATA* keys, bool facingRight )
 {
+	memset(b_CurrCommand, 0, 200);
     m_CurrCommandName = NULL;
     m_KeyBuffer[ m_KeyIndex ].keyBitfield = 0; // buffer是用来存储上次的键值
   
@@ -281,10 +290,9 @@ void CCmdManager::Update( KEYBOARDDATA* keys, bool facingRight )
             }
         }    
     }
-
+	//PrintMessage("m_key = %d ,\n", m_KeyBuffer[m_KeyIndex].keyBitfield);
     PLCOMMAND* currCommand = m_Commands;
-    
-    for( int a = 0; a < m_CommandCount; a++ )// 遍历所有命令
+    for( int a = 0; a < m_CommandCount; a++ )// 葛电 目盖靛 风橇
     {           
         int nTime = -1, nLastTime = -1;
         int currKeyIndex = 0;
@@ -292,7 +300,7 @@ void CCmdManager::Update( KEYBOARDDATA* keys, bool facingRight )
 		// 使用例子command = ~D, DF, F, x讲解
 		// 最初从x判定，按下，且与要求一致，将记录最后的时间，然后currKeyIndex++，将buffer判定向前推进
 		// F，DF，一致的时候向前走，直到~D一致，记录第一时间，判定是否超出。
-        for( int b = currCommand->nHowManyCommand - 1; b >= 0; b-- )// 一个命令，判断是否匹配所有按键
+        for( int b = currCommand->nHowManyCommand - 1; b >= 0; b-- )// 目盖靛狼 阿磊狼 虐 风橇
         {
             bool bCommand = false;
             bool onRelease = (( currCommand->nCommand[ b ].keyModifier & PLC_KEYMOD_ON_RELEASE ) != 0 );// 按键是否需要放开
@@ -301,10 +309,11 @@ void CCmdManager::Update( KEYBOARDDATA* keys, bool facingRight )
             bool banOtherInput = (( currCommand->nCommand[ b ].keyModifier & PLC_KEYMOD_BAN_OTHER_INPUT ) != 0 );// 是否禁止有其他按键按下
             int gameTicksToHold = currCommand->nCommand[ b ].gameTicksForHold; // 按键按下的时间
             int keyCode = currCommand->nCommand[ b ].keyCode;// 按键转码
-            
-            for( ; currKeyIndex < m_KeyBufferSize; currKeyIndex++ )// 每个键对所有buff处理！！！！
+			//int interTicks = 0;
+
+            for( ; currKeyIndex < m_KeyBufferSize; currKeyIndex++ )// 喘范带 虐 滚欺狼 虐 风橇
             {
-                PLCOMMANDFRAMEINPUT* frameInput = &m_KeyBuffer[ AdjustKeyIndex( m_KeyIndex, -currKeyIndex ) ];// 从当前的输入键值，向前遍历
+                PLCOMMANDFRAMEINPUT* frameInput = &m_KeyBuffer[ AdjustKeyIndex( m_KeyIndex, -currKeyIndex ) ];// 目盖靛 虐贸烦 开鉴风橇
                 bool keyDown = (( frameInput->keyBitfield & keyCode ) == keyCode );
                 if( keyDown && !use4Way )// 需要按键按下，不是四个方向
                 {
@@ -316,10 +325,11 @@ void CCmdManager::Update( KEYBOARDDATA* keys, bool facingRight )
                 bool buttonConditionsMet = false;
                 
                 // see how long it's been held                
-                if( onRelease != keyDown )// 按键松开，并保持一定时间时间(keyDown&&!onRelease）
+                if( /*onRelease != */keyDown )
                 {
                     int gameTicksHeld = 0;
-                    for( int k = currKeyIndex + 1; k < m_KeyBufferSize; k++ )
+                    
+					for( int k = currKeyIndex + 1; k < m_KeyBufferSize; k++ )	//倔付唱 穿福绊 乐菌绰瘤 chack & pass
                     {
                         PLCOMMANDFRAMEINPUT* frameInput2 = &m_KeyBuffer[ AdjustKeyIndex( m_KeyIndex, -k ) ];// 从当前的输入键值，向前遍历
                         bool keyDown2 = (( frameInput2->keyBitfield & keyCode ) == keyCode );
@@ -337,7 +347,7 @@ void CCmdManager::Update( KEYBOARDDATA* keys, bool facingRight )
                                 buttonConditionsMet = keyDown;
                                 break;
                             }
-                            else if( onRelease )
+							else if (onRelease)
                             {
                                 if( gameTicksHeld >= gameTicksToHold )
                                 {
@@ -345,19 +355,31 @@ void CCmdManager::Update( KEYBOARDDATA* keys, bool facingRight )
                                     break;
                                 }
                             }
+							/*
                             else
                             {
                                 buttonConditionsMet = ( b < currCommand->nHowManyCommand - 1 );
                                 break;
                             }
+							*/
                         }
                         else
                         {
-                            buttonConditionsMet = !( onHold || onRelease );    
+							if (gameTicksHeld <= currCommand->nCommandTime)
+							{
+								buttonConditionsMet = !(onHold || onRelease);
+							}
+							currKeyIndex = k;
                             break;
                         }                        
                     }
                 }
+				else{
+					if (frameInput->keyBitfield != 0){
+						bCommand = false;
+						break;
+					}
+				}
                 // 如果单键过关了，就记录开始结束时间，继续下一个按键，
 				if( buttonConditionsMet )
 				{
@@ -373,7 +395,7 @@ void CCmdManager::Update( KEYBOARDDATA* keys, bool facingRight )
 					}
 
 					bCommand = true;
-					currKeyIndex++;
+					currKeyIndex++;	//嘎疽栏聪 促澜虐何磐 眉农
 					break;                    
 				}
            }
@@ -390,13 +412,15 @@ void CCmdManager::Update( KEYBOARDDATA* keys, bool facingRight )
            if( ( nLastTime > ( m_pTimer->GetGameTime()- currCommand->nBufferTime )) && ( nLastTime - nTime ) <= currCommand->nCommandTime )
             {
                 m_CurrCommandName = currCommand->strCommand;
+				if (strcmp("holdfwd", m_CurrCommandName) == 0)
+					printf("");
+				b_CurrCommand[currCommand->num]=true;
                 PrintMessage("time:%5d, %s",m_pTimer->GetGameTime(), m_CurrCommandName);
-                break;
+                //break;
             }
         }
         currCommand++;
     }
-
     if( ++m_KeyIndex >= m_KeyBufferSize )
         m_KeyIndex = 0;
 }
