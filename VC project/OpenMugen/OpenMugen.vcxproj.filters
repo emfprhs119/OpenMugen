@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
     </Filter>
+    <Filter Include="dll">
+      <UniqueIdentifier>{6d2ab504-a046-434a-8c11-de2144317ce4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{59d83184-eb50-4707-9ed5-3a94653a9b8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\AirManager.cpp">
@@ -146,5 +152,33 @@
     <ClInclude Include="..\..\SndManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="lib\SDL.lib">
+      <Filter>lib</Filter>
+    </Library>
+    <Library Include="lib\SDL2.lib">
+      <Filter>lib</Filter>
+    </Library>
+    <Library Include="lib\SDLmain.lib">
+      <Filter>lib</Filter>
+    </Library>
+    <Library Include="lib\SDL2main.lib">
+      <Filter>lib</Filter>
+    </Library>
+    <Library Include="lib\SDL2_mixer.lib">
+      <Filter>lib</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="dll\SDL.dll">
+      <Filter>dll</Filter>
+    </CustomBuild>
+    <CustomBuild Include="dll\SDL2.dll">
+      <Filter>dll</Filter>
+    </CustomBuild>
+    <CustomBuild Include="dll\SDL2_mixer.dll">
+      <Filter>dll</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
