@@ -1,6 +1,7 @@
 #include "global.h"
 
-void my_audio_callback(void *userdata, Uint8 *stream, int len);
+void my_audio_callback(void *, Uint8 *, int);
+//void my_audio_callback(void *userdata, Uint8 *stream, int len);
 void DecodeSnd(const char *strSndFile, SNDDATA *IpSndList, SNDHEADER Header);
 static Uint8 *audio_pos; // global pointer to the audio buffer to be played
 static Uint32 audio_len; // remaining length of the sample we have to play
@@ -36,12 +37,10 @@ bool CSndManager::LoadSndFile(const char *strSndFile, CAllocater* a, SNDFLAG fla
 		IpSndListPlayer.data = (SNDDATA*)m_pAlloc->Realloc(IpSndListPlayer.data, sizeof(SNDDATA)*Header.nNumberOfSounds);
 		DecodeSnd(strSndFile, IpSndListPlayer.data, Header);
 	}
-	/*
-	if ( < 0){
-		fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
-		exit(-1);
+	else{
+		throw(CError("CSndManager::LoadSndFile : Can't open %s", SDLfile));
 	}
-	*/
+	return 0;
 }
 
 void CSndManager::PlayAudio(SNDFLAG flag, s32  nGroupNumber, s32 SampleNumber)
@@ -61,7 +60,7 @@ void CSndManager::PlayAudio(SNDFLAG flag, s32  nGroupNumber, s32 SampleNumber)
 	else if (flag == PLAYER){
 		curIpSndList = IpSndListPlayer;
 	}
-	int i = 0;
+	u16 i = 0;
 	for (; i < curIpSndList.nNumberOfSounds; i++){
 		if ((curIpSndList.data[i]).nGroupNumber == nGroupNumber && curIpSndList.data[i].SampleNumber == SampleNumber)
 			break;
@@ -150,8 +149,7 @@ void DecodeSnd(const char *strSndFile, SNDDATA *IpSndList, SNDHEADER Header){
 	Uint8 *wav_buffer;
 	SDL_AudioSpec wav_spec;
 	SDL_AudioCVT *cvt;
-	Mix_Chunk *mix;
-	for (int i = 0; i < Header.nNumberOfSounds; i++){
+	for (u16 i = 0; i < Header.nNumberOfSounds; i++){
 		SDLfile = SDL_RWFromFile(strSndFile, "rb");
 		if (i == 0)
 			SDL_RWseek(SDLfile, Header.SubHeaderFileOffset, SEEK_SET);
@@ -188,11 +186,11 @@ void DecodeSnd(const char *strSndFile, SNDDATA *IpSndList, SNDHEADER Header){
 	}
 }
 void my_audio_callback(void *userdata, Uint8 *stream, int len) {
-
+ 
 	if (audio_len == 0)
 		return;
 
-	len = (len > audio_len ? audio_len : len);
+	len = (len > (int)audio_len ? audio_len : len);
 	
 		SDL_memcpy (stream, audio_pos, len); 					// simply copy from one buffer into the other
 		// mix from one buffer into another

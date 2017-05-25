@@ -91,7 +91,7 @@ void CVideoSystem::LoadFont()
     if(font==NULL)
        PrintMessage("CVideoSystem:: DebugFonts not found");
        
-    pFile=fopen("font.txt","r");
+	fopen_s(&pFile,"font.txt", "r");
     
     if(pFile==NULL)
         PrintMessage("font.txt not found");
@@ -99,7 +99,7 @@ void CVideoSystem::LoadFont()
     while(!feof(pFile))
     {
         fgets(strTemp,255,pFile);
-        sscanf(strTemp,"%c %i %i",&my_Fonts[i].c,&my_Fonts[i].x,&my_Fonts[i].nWidth);
+		sscanf_s(strTemp, "%c %i %i", &my_Fonts[i].c, sizeof(u8), &my_Fonts[i].x, &my_Fonts[i].nWidth);
         i++;    
     }
     
@@ -214,7 +214,7 @@ void CVideoSystem::DrawText(int x,int y,char *strText,...)
 
   va_list ap;                // Pointer To List Of Arguments
   va_start(ap, strText);     // Parses The String For Variables
-  vsprintf(string, strText, ap); // Converts Symbols To Actual Numbers
+  vsprintf_s(string, strText, ap); // Converts Symbols To Actual Numbers
   va_end(ap);
   
   memset(&fontRect,0,sizeof(SDL_Rect));
@@ -230,7 +230,7 @@ void CVideoSystem::DrawText(int x,int y,char *strText,...)
   screenRect.y=y;
   
   
-  for(int i=0;i<strlen(string);i++)
+  for(int i=0;i<(int)strlen(string);i++)
   {
     for(int j=0;j<255;j++)
     {
@@ -288,7 +288,7 @@ void CVideoSystem::NormalBlt(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask)
      u16 *lpWorkData;
      u16 pitch;
 
-     s16 width=lpSprite->PcxHeader.widht;
+     s16 width=lpSprite->PcxHeader.width;
      s16 height=lpSprite->PcxHeader.height;
      u8* byData=lpSprite->byPcxFile;
      u16 *ColorTable=lpSprite->ColorPallet;
@@ -338,7 +338,7 @@ void CVideoSystem::NormalBlt(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask)
       
             for(int j=xClip;j<width;j++)
             {
-              *lpWorkData=ColorTable[byData[j + i*lpSprite->PcxHeader.widht]];               
+              *lpWorkData=ColorTable[byData[j + i*lpSprite->PcxHeader.width]];               
                lpWorkData++;
                
              }
@@ -355,8 +355,8 @@ void CVideoSystem::NormalBlt(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask)
       
             for(int j=xClip;j<width;j++)
             {
-              if(byData[j + i*lpSprite->PcxHeader.widht] != byData[0])      
-              *lpWorkData=ColorTable[byData[j + i*lpSprite->PcxHeader.widht]];               
+              if(byData[j + i*lpSprite->PcxHeader.width] != byData[0])      
+              *lpWorkData=ColorTable[byData[j + i*lpSprite->PcxHeader.width]];               
                lpWorkData++;
                
              }
@@ -373,8 +373,8 @@ void CVideoSystem::NormalBltScale(SFFSPRITE *lpSprite, s16 x, s16 y,float scale,
 {
 	u16 *lpWorkData;
 	u16 pitch;
-	s16 width = lpSprite->PcxHeader.widht*scale;
-	s16 height = lpSprite->PcxHeader.height*scale;
+	s16 width = (s16)(lpSprite->PcxHeader.width*scale);
+	s16 height = (s16)(lpSprite->PcxHeader.height*scale);
 	u8* byData = lpSprite->byPcxFile;
 	u16 *ColorTable = lpSprite->ColorPallet;
 
@@ -423,7 +423,7 @@ void CVideoSystem::NormalBltScale(SFFSPRITE *lpSprite, s16 x, s16 y,float scale,
 
 			for (int j = xClip; j<width; j++)
 			{
-				*lpWorkData = ColorTable[byData[j + i*lpSprite->PcxHeader.widht]];
+				*lpWorkData = ColorTable[byData[j + i*lpSprite->PcxHeader.width]];
 				lpWorkData++;
 
 			}
@@ -440,8 +440,8 @@ void CVideoSystem::NormalBltScale(SFFSPRITE *lpSprite, s16 x, s16 y,float scale,
 
 			for (int j = xClip; j<width; j++)
 			{
-				if (byData[(int)(j / scale) + (int)(i / scale)*lpSprite->PcxHeader.widht] != byData[0])
-					*lpWorkData = ColorTable[byData[(int)(j / scale) + (int)(i / scale) * lpSprite->PcxHeader.widht]];
+				if (byData[(int)(j / scale) + (int)(i / scale)*lpSprite->PcxHeader.width] != byData[0])
+					*lpWorkData = ColorTable[byData[(int)(j / scale) + (int)(i / scale) * lpSprite->PcxHeader.width]];
 				lpWorkData++;
 
 			}
@@ -460,7 +460,7 @@ void CVideoSystem::NormalFlipH(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask)
       u16 *lpWorkData;
      u16 pitch;
 
-     s16 width=lpSprite->PcxHeader.widht;
+     s16 width=lpSprite->PcxHeader.width;
      s16 height=lpSprite->PcxHeader.height;
      u8* byData=lpSprite->byPcxFile;
      u16 *ColorTable=lpSprite->ColorPallet;
@@ -512,7 +512,7 @@ void CVideoSystem::NormalFlipH(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask)
       
             for(int j=xClip;j<width;j++)
             {
-              *lpWorkData=ColorTable[byData[width-j+xClip2-1 + i*lpSprite->PcxHeader.widht]];               
+              *lpWorkData=ColorTable[byData[width-j+xClip2-1 + i*lpSprite->PcxHeader.width]];               
                lpWorkData++;
                
              }
@@ -529,8 +529,8 @@ void CVideoSystem::NormalFlipH(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask)
       
             for(int j=xClip;j<width;j++)
             {
-              if(byData[width-j+xClip2-1 + i*lpSprite->PcxHeader.widht] != byData[0])
-              *lpWorkData=ColorTable[byData[width-j+xClip2-1 + i*lpSprite->PcxHeader.widht]];               
+              if(byData[width-j+xClip2-1 + i*lpSprite->PcxHeader.width] != byData[0])
+              *lpWorkData=ColorTable[byData[width-j+xClip2-1 + i*lpSprite->PcxHeader.width]];               
                lpWorkData++;
                
              }
@@ -553,7 +553,7 @@ void CVideoSystem::NormalBlt(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask,float xS
      u16 *lpWorkData;
      u16 pitch;
 
-     s16 width=(u16)(lpSprite->PcxHeader.widht*xScale);
+     s16 width=(u16)(lpSprite->PcxHeader.width*xScale);
      s16 height=(u16)(lpSprite->PcxHeader.height*yScale);
      u8* byData=lpSprite->byPcxFile;
      RGBColor *ColorTable=lpSprite->ColorPallet;
@@ -594,9 +594,9 @@ void CVideoSystem::NormalBlt(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask,float xS
             for(int j=xClip;j<width;j++)
             {
               *lpWorkData=(u16)SDL_MapRGB(screen->format,
-                                       ColorTable[byData[(u16)(j/xScale) + (u16)(i/yScale)*lpSprite->PcxHeader.widht]].R,
-                                       ColorTable[byData[(u16)(j/xScale) + (u16)(i/yScale)*lpSprite->PcxHeader.widht]].G,
-                                       ColorTable[byData[(u16)(j/xScale) + (u16)(i/yScale)*lpSprite->PcxHeader.widht]].B);               
+                                       ColorTable[byData[(u16)(j/xScale) + (u16)(i/yScale)*lpSprite->PcxHeader.width]].R,
+                                       ColorTable[byData[(u16)(j/xScale) + (u16)(i/yScale)*lpSprite->PcxHeader.width]].G,
+                                       ColorTable[byData[(u16)(j/xScale) + (u16)(i/yScale)*lpSprite->PcxHeader.width]].B);               
                lpWorkData++;
                
              }
@@ -619,9 +619,9 @@ void CVideoSystem::NormalBlt(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask,float xS
         for(int j=xClip;j<width;j++)
         {
            *lpWorkData=(u16)SDL_MapRGB(screen->format,
-                                ColorTable[byData[j + i*lpSprite->PcxHeader.widht]].R,
-                                ColorTable[byData[j + i*lpSprite->PcxHeader.widht]].G,
-                                ColorTable[byData[j + i*lpSprite->PcxHeader.widht]].B);
+                                ColorTable[byData[j + i*lpSprite->PcxHeader.width]].R,
+                                ColorTable[byData[j + i*lpSprite->PcxHeader.width]].G,
+                                ColorTable[byData[j + i*lpSprite->PcxHeader.width]].B);
            lpWorkData++;
                
         }
@@ -634,9 +634,9 @@ void CVideoSystem::NormalBlt(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask,float xS
         for(int j=xClip;j<width;j++)
         {
            if((u16)SDL_MapRGB(screen->format,
-                                ColorTable[byData[j + i*lpSprite->PcxHeader.widht]].R,
-                                ColorTable[byData[j + i*lpSprite->PcxHeader.widht]].G,
-                                ColorTable[byData[j + i*lpSprite->PcxHeader.widht]].B) 
+                                ColorTable[byData[j + i*lpSprite->PcxHeader.width]].R,
+                                ColorTable[byData[j + i*lpSprite->PcxHeader.width]].G,
+                                ColorTable[byData[j + i*lpSprite->PcxHeader.width]].B) 
            != (u16)SDL_MapRGB(screen->format,
                                 ColorTable[0].R,
                                 ColorTable[0].G,
@@ -645,9 +645,9 @@ void CVideoSystem::NormalBlt(SFFSPRITE *lpSprite,s16 x,s16 y,bool bMask,float xS
            
                      
            *lpWorkData=(u16)SDL_MapRGB(screen->format,
-                                ColorTable[byData[j + i*lpSprite->PcxHeader.widht]].R,
-                                ColorTable[byData[j + i*lpSprite->PcxHeader.widht]].G,
-                                ColorTable[byData[j + i*lpSprite->PcxHeader.widht]].B);
+                                ColorTable[byData[j + i*lpSprite->PcxHeader.width]].R,
+                                ColorTable[byData[j + i*lpSprite->PcxHeader.width]].G,
+                                ColorTable[byData[j + i*lpSprite->PcxHeader.width]].B);
            }
            lpWorkData++;
                

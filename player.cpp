@@ -34,10 +34,7 @@ CPlayer::CPlayer()
 	bHitCounterPresit = false;
 	bMoveHitPresit = false;
 	bHitDef = false;
-
 	bCtrl = true;
-
-
 	nLife = 1000;
 	nPower = 1000;
 	nStateTime = 0;
@@ -126,20 +123,21 @@ CharFileInfo ParseDefFile(const char* strPlayer){
 	char* file;
 	int palNum = 0;
 	int palDNum = 0;
-	file = (char*)malloc(sizeof(char)* 30);
-	sprintf(file, "%s/", strPlayer);
-	strcpy(info.cmd, file);
-	strcpy(info.cns, file);
-	strcpy(info.st, file);
+	u16 SizeOfFileName = 256;
+	file = (char*)malloc(sizeof(char)*SizeOfFileName);
+	sprintf_s(file, SizeOfFileName, "%s/", strPlayer);
+	strcpy_s(info.cmd, SizeOfFileName, file);
+	strcpy_s(info.cns, SizeOfFileName, file);
+	strcpy_s(info.st, SizeOfFileName, file);
 	//strcpy(info.stcommon, file);
-	strcpy(info.sprite, file);
-	strcpy(info.anim, file);
-	strcpy(info.sound, file);
-	strcpy(info.ai, file);
+	strcpy_s(info.sprite, SizeOfFileName, file);
+	strcpy_s(info.anim, SizeOfFileName, file);
+	strcpy_s(info.sound, SizeOfFileName, file);
+	strcpy_s(info.ai, SizeOfFileName, file);
 	for (int i = 0; i < 12; i++){
-		strcpy(info.pal[i], file);
+		strcpy_s(info.pal[i], SizeOfFileName, file);
 	}
-	sprintf(file, "%s/%s.def", strPlayer, strPlayer);
+	sprintf_s(file, SizeOfFileName,  "%s/%s.def", strPlayer, strPlayer);
 
 	if (!tok.OpenFile(file))
 	{
@@ -151,31 +149,31 @@ CharFileInfo ParseDefFile(const char* strPlayer){
 		if (tok.CheckToken("name")){
 			if (tok.CheckToken("="))
 			{
-				strcpy(info.name, tok.GetToken());
+				strcpy_s(info.name, SizeOfFileName, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("displayname")){
 			if (tok.CheckToken("="))
 			{
-				strcpy(info.displayname, tok.GetToken());
+				strcpy_s(info.displayname, SizeOfFileName, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("versiondate")){
 			if (tok.CheckToken("="))
 			{
-				strcpy(info.versiondate, tok.GetToken());
+				strcpy_s(info.versiondate, 15, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("mugenversion")){
 			if (tok.CheckToken("="))
 			{
-				strcpy(info.mugenversion, tok.GetToken());
+				strcpy_s(info.mugenversion, 5, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("author")){
 			if (tok.CheckToken("="))
 			{
-				strcpy(info.author, tok.GetToken());
+				strcpy_s(info.author, SizeOfFileName, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("localcoord")){
@@ -188,56 +186,56 @@ CharFileInfo ParseDefFile(const char* strPlayer){
 		{
 			if (tok.CheckToken("="))
 			{
-				strcat(info.cmd, tok.GetToken());
+				strcat_s(info.cmd, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("cns"))
 		{
 			if (tok.CheckToken("="))
 			{
-				strcat(info.cns, tok.GetToken());
+				strcat_s(info.cns, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("st"))
 		{
 			if (tok.CheckToken("="))
 			{
-				strcat(info.st, tok.GetToken());
+				strcat_s(info.st, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("stcommon"))
 		{
 			if (tok.CheckToken("="))
 			{
-				strcpy(info.stcommon, tok.GetToken());
+				strcpy_s(info.stcommon, SizeOfFileName, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("sprite"))
 		{
 			if (tok.CheckToken("="))
 			{
-				strcat(info.sprite, tok.GetToken());
+				strcat_s(info.sprite, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("anim"))
 		{
 			if (tok.CheckToken("="))
 			{
-				strcat(info.anim, tok.GetToken());
+				strcat_s(info.anim, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("sound"))
 		{
 			if (tok.CheckToken("="))
 			{
-				strcat(info.sound, tok.GetToken());
+				strcat_s(info.sound, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("ai"))
 		{
 			if (tok.CheckToken("="))
 			{
-				strcat(info.ai, tok.GetToken());
+				strcat_s(info.ai, tok.GetToken());
 			}
 		}
 		else if (tok.CheckToken("pal.defaults"))
@@ -257,7 +255,7 @@ CharFileInfo ParseDefFile(const char* strPlayer){
 
 			if (tok.CheckToken("="))
 			{
-				strcat(info.pal[palNum++], tok.GetToken());
+				strcat_s(info.pal[palNum++], tok.GetToken());
 			}
 		}
 		else
@@ -302,9 +300,9 @@ bool CPlayer::LoadPlayer(const char* strPlayer)
 
 	m_SffManager.LoadActToSff(defInfo.pal[defInfo.pal_defaults[3]]);
 	m_SffManager.LoadSffFile(defInfo.sprite);
-	m_SndManager.LoadSndFile("common.snd", m_pAlloc, COMMON);
-	m_SndManager.LoadSndFile("fight.snd", m_pAlloc,FIGHT);
-	m_SndManager.LoadSndFile(defInfo.sound, m_pAlloc,PLAYER);
+	//m_SndManager.LoadSndFile("common.snd", m_pAlloc, COMMON);
+	//m_SndManager.LoadSndFile("fight.snd", m_pAlloc,FIGHT);
+	//m_SndManager.LoadSndFile(defInfo.sound, m_pAlloc,PLAYER);
 	//Make always masked blit
 	m_SffManager.SetBltFlags(CSffManager::BLT_NORMALMASKED);
 	m_SffManager.PrepareAnim(0);
@@ -329,7 +327,6 @@ bool CPlayer::CheckState(PLSTATE* tempState)
 	}
 	bool bTriggerAll = true;
 	bool bTrigger = true;
-	u8 nTriggerType;
 	PLTRIGGER trigger;
 	int triggNum = 1;
 	for (int i = 0; i < tempState->nHowManyTriggerAlls; i++)
@@ -430,7 +427,7 @@ void CPlayer::HandleFLAG(){
 
 	if (bHitDef && hitVardata.pausetime > 0){
 		if (!bPrevHitDef){
-			m_SndManager.PlayAudio(hitVardata.hitsound_snd_flag, hitVardata.hitsound_snd_grp, hitVardata.hitsound_snd_item);
+			//m_SndManager.PlayAudio(hitVardata.hitsound_snd_flag, hitVardata.hitsound_snd_grp, hitVardata.hitsound_snd_item);
 			bPrevHitDef = true;
 		}
 		hitVardata.pausetime -= hitVardata.pausetime == 1 ? 1 : 2;
@@ -484,7 +481,6 @@ void CPlayer::HandlePhysic()
 	Element *OtherEle = other->m_SffManager.GetCurrAnimation()->AnimationElement + other->m_SffManager.GetCurrAnimation()->nCurrentImage;
 	ClsnRECT MyRect;
 	ClsnRECT OtherRect;
-	s16 tmp;
 	for (int i = 0; i < MyEle->nNumberOfClsn1 && !bHitDef; i++){
 		for (int j = 0; j < OtherEle->nNumberOfClsn2 && !bHitDef; j++){
 			MyRect = (MyEle->pClsn1Data + i)->ClsnRect; 
@@ -636,8 +632,9 @@ void CPlayer::ChangeState(s32 nStateNumber)
 	if (lpCurrStatedef->movetype != untouch)
 		nMoveType = lpCurrStatedef->movetype;
 	//Set the Ctrl flag  
-	if (lpCurrStatedef->bCtrl != -1)
-		bCtrl = lpCurrStatedef->bCtrl;
+	if (lpCurrStatedef->nCtrl != -1){
+		bCtrl = (lpCurrStatedef->nCtrl == 1);
+	}
 
 	bHitDefPresit = lpCurrStatedef->bHitdefpersist;
 	bHitCounterPresit = lpCurrStatedef->bHitcountpersist;
@@ -825,7 +822,7 @@ void CPlayer::Execute(PLSTATE* state)
 			CONTROLLERPARAMS param = state->pConParm[i];
 			switch (param.nParam){
 			case CPN_value:
-				 m_SndManager.PlayAudio(param.flag, param.vNum, param.vNum1); break;
+				 //m_SndManager.PlayAudio(param.flag, param.vNum, param.vNum1); break;
 			case CPN_volumescale:break;
 			case CPN_channel:break;
 			case CPN_lowpriority:break;
@@ -863,10 +860,10 @@ void CPlayer::Execute(PLSTATE* state)
 				}break;
 			case Control_VarSet:
 				switch (param.nParam){
-				case CPN_fvar:var[param.vNum] = value; break;
-				case CPN_sysfvar:sysvar[param.vNum] = value; break;
-				case CPN_var:var[param.vNum] = value; break;
-				case CPN_sysvar:sysvar[param.vNum] = value; break;
+				case CPN_fvar:var[param.vNum] = (s32)value; break;
+				case CPN_sysfvar:sysvar[param.vNum] = (s32)value; break;
+				case CPN_var:var[param.vNum] = (s32)value; break;
+				case CPN_sysvar:sysvar[param.vNum] = (s32)value; break;
 				}break;
 			case Control_PosSet:
 				switch (param.nParam){
@@ -879,7 +876,7 @@ void CPlayer::Execute(PLSTATE* state)
 				case CPN_y:this->AddPos(0, value); break;
 				}break;
 			case Control_CtrlSet:
-				this->bCtrl = (int)value; break;
+				this->bCtrl = (value==1); break;
 			case Control_AssertSpecial:
 				tmpAssertSpecial += (int)value;
 				break;
@@ -889,7 +886,7 @@ void CPlayer::Execute(PLSTATE* state)
 				break;
 			case Control_ChangeState:
 				if (param.nParam == CPN_ctrl){
-					this->bCtrl = (int)value; break;
+					this->bCtrl = (value==1); break;
 				}
 				else if (param.nParam == CPN_value){
 					if ((nAssertSpecial & nowalk) && ((int)value == 20))
@@ -924,20 +921,22 @@ float CPlayer::GetVar(ConParmName con, u8 num){
 	case CPN_flag:
 		break;
 	case CPN_var:
-		return var[num-1];
+		return (float)var[num-1];
 		break;
 	case CPN_sysvar:
-		return sysvar[num-1];
+		return (float)sysvar[num - 1];
 		break;
 	case CPN_fvar:
-		return var[num-1];
+		return (float)var[num - 1];
 		break;
 	case CPN_sysfvar:
-		return sysfvar[num-1];
+		return (float)sysfvar[num - 1];
 		break;
 	default:
 		break;
 	}
+	throw(CError("CPlayer::GetVar : Can't passing ConParmName %i", con));
+	return -1;
 }
 
 void CPlayer::ResetHitVarData()

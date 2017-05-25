@@ -93,7 +93,7 @@ struct PCXHEADER
 	u8 Encoding;
 	u8 BPP;
 	u16 x, y;
-	u16 widht, height;
+	u16 width, height;
 	u16 HRES, VRES;
 	u8 ColorMap[48];
 	u8 reserved;
@@ -168,7 +168,7 @@ struct SNDDATA
 };
 struct SND
 {
-	u8 nNumberOfSounds;
+	u32 nNumberOfSounds;
 	SNDDATA *data;
 };
 
@@ -292,11 +292,11 @@ struct HITVARDATA{
 	HITDEFVAR fall_animtype = back;
 	u8 hit_prior = 4;
 	HITDEFVAR hit_type = HIT;
-	s8 hit_damage = 0;
-	s8 guard_damage = 0;
-	u8	pausetime = 0;
-	u8 hitshaketime = 0;
-	u8 guard_pausetime = 0;
+	s16 hit_damage = 0;
+	s16 guard_damage = 0;
+	u16	pausetime = 0;
+	u16 hitshaketime = 0;
+	u16 guard_pausetime = 0;
 	int sparkno;
 	int guard_sparkno;
 	XYVALUE sparkxy;
@@ -314,7 +314,7 @@ struct HITVARDATA{
 	int air_hittime = 20;
 	int guard_ctrltime;
 	int guard_dist;
-	float  yaccel = 1.4;
+	float  yaccel = 1.4f;
 	XYVALUE ground_velocity;
 	float guard_velocity;
 	XYVALUE air_velocity;
@@ -412,7 +412,7 @@ struct PLSTATEDEF
 	s32 nAnim;
 	//optional param
 	XYVALUE Velset;
-	s8 bCtrl;
+	s8 nCtrl;
 	s16 nPoweradd;
 	s16 nJuggle;
 	bool bFacep2;
@@ -484,7 +484,7 @@ struct PLDATA
 	s16 nDefence;
 	s16 nPower;
 	s16 nFallDefenceUp;
-	s16 nLieDownTime;
+	u8 nLieDownTime;
 	s16 nAirjuggle;
 	s16 nSparkno;
 	s16 nGuardSparkno;
@@ -536,23 +536,23 @@ struct PLAYERVELOCITY
 struct PLAYERMOVEMENT
 {
 	s16 AirJumpNum=1;
-	s16 nAirJumpHight=140;
-	float yaccel=1.76;
-	float StandFriction=.85;
-	float CrouchFriction=.82;
-	float StandFrictionThreshold=8;
-	float CrouchFrictionThreshold=.2;
+	float nAirJumpHight = 140.f;
+	float yaccel=1.76f;
+	float StandFriction=.85f;
+	float CrouchFriction=.82f;
+	float StandFrictionThreshold=8.f;
+	float CrouchFrictionThreshold=.2f;
 	//float DownFrictionThreshold;
-	float air_gethit_groundlevel = 100;
-	float air_gethit_groundrecover_ground_threshold = -80;
-	float air_gethit_groundrecover_groundlevel = 40;
-	float air_gethit_airrecover_threshold = -4;
-	float air_gethit_airrecover_yaccel = 1.4;
-	float air_gethit_trip_groundlevel = 60;
+	float air_gethit_groundlevel = 100.f;
+	float air_gethit_groundrecover_ground_threshold = -80.f;
+	float air_gethit_groundrecover_groundlevel = 40.f;
+	float air_gethit_airrecover_threshold = -4.f;
+	float air_gethit_airrecover_yaccel = 1.4f;
+	float air_gethit_trip_groundlevel = 60.f;
 	XYVALUE down_bounce_offset = XYVALUE{ 0, 80 };
-	float down_bounce_yaccel = 1.6;
-	float down_bounce_groundlevel = 48;
-	float down_friction_threshold = .2;
+	float down_bounce_yaccel = 1.6f;
+	float down_bounce_groundlevel = 48.f;
+	float down_friction_threshold = .2f;
 
 };
 //Playerconstant struct
@@ -565,25 +565,25 @@ struct PLAYERCONST
 
 
 };
-
+#define FILENAMELEN 256
 struct CharFileInfo
 {
-	char name[40];
-	char displayname[40];
+	char name[FILENAMELEN];
+	char displayname[FILENAMELEN];
 	char versiondate[15];
 	char mugenversion[5];
-	char author[40];
+	char author[FILENAMELEN];
 	int pal_defaults[4];
 	XYVALUE localcoord;
-	char cmd[40];
-	char cns[40];
-	char st[40];
-	char stcommon[40];
-	char sprite[40];
-	char anim[40];
-	char sound[40];
-	char ai[40];
-	char pal[12][40];
+	char cmd[FILENAMELEN];
+	char cns[FILENAMELEN];
+	char st[FILENAMELEN];
+	char stcommon[FILENAMELEN];
+	char sprite[FILENAMELEN];
+	char anim[FILENAMELEN];
+	char sound[FILENAMELEN];
+	char ai[FILENAMELEN];
+	char pal[12][FILENAMELEN];
 };
 
 class CError
@@ -597,10 +597,10 @@ public:
 
 		va_list ap;                // Pointer To List Of Arguments
 		va_start(ap, strError);         // Parses The String For Variables
-		vsprintf(string, strError, ap); // Converts Symbols To Actual Numbers
+		vsprintf_s(string, strError, ap); // Converts Symbols To Actual Numbers
 		va_end(ap);
 
-		strcpy(strMessage, string);
+		strcpy_s(strMessage,100, string);
 
 	}
 	const char *GetError(){ return strMessage; }

@@ -29,6 +29,7 @@ int main(int argc, char **argv)
     }
     catch(CError &e)
     {
+		printf("%s", e.GetError());
       mugen.Quit();          
       //windows only , change this for other OS 
     }

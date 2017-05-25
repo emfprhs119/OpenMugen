@@ -49,7 +49,7 @@ void CStack::Push(float nValue,char* strValue)
         PrintMessage("CStack::Push Stack overflow");
       
       if(strValue!=NULL)
-        strcpy(m_Stack[nPos].string,strValue);
+		  strcpy_s(m_Stack[nPos].string, strlen(strValue)+1, strValue);
       
       m_Stack[nPos].Value=nValue;
        

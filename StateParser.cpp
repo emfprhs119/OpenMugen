@@ -76,7 +76,7 @@ void CStateParser::ParseConstFile(const char * strFileName, PLAYERCONST *myPlaye
 				if (!tok.CheckToken("KO.echo"))
 					tok.GetToken();
 				if (tok.CheckToken("="))
-					myPlayerConst->PlayerData.bKoEcho = tok.GetInt();
+					myPlayerConst->PlayerData.bKoEcho = tok.GetBool();
 				if (!tok.CheckToken("volume"))
 					tok.GetToken();
 				if (tok.CheckToken("="))
@@ -96,11 +96,11 @@ void CStateParser::ParseConstFile(const char * strFileName, PLAYERCONST *myPlaye
 				if (!tok.CheckToken("xscale"))
 					tok.GetToken();
 				if (tok.CheckToken("="))
-					myPlayerConst->PlayerSize.nXscale = tok.GetInt();
+					myPlayerConst->PlayerSize.nXscale = tok.GetFloat();
 				if (!tok.CheckToken("yscale"))
 					tok.GetToken();
 				if (tok.CheckToken("="))
-					myPlayerConst->PlayerSize.nYscale = tok.GetInt();
+					myPlayerConst->PlayerSize.nYscale = tok.GetFloat();
 				if (!tok.CheckToken("ground.back"))
 					tok.GetToken();
 				if (tok.CheckToken("="))
@@ -132,7 +132,7 @@ void CStateParser::ParseConstFile(const char * strFileName, PLAYERCONST *myPlaye
 				if (!tok.CheckToken("proj.doscale"))
 					tok.GetToken();
 				if (tok.CheckToken("="))
-					myPlayerConst->PlayerSize.bProjDoScale = tok.GetInt();
+					myPlayerConst->PlayerSize.bProjDoScale = tok.GetBool();
 				if (!tok.CheckToken("head.pos"))
 					tok.GetToken();
 				if (tok.CheckToken("="))
@@ -212,7 +212,7 @@ void CStateParser::ParseConstFile(const char * strFileName, PLAYERCONST *myPlaye
 				if (!tok.CheckToken("airjump.height"))
 					tok.GetToken();
 				if (tok.CheckToken("="))
-					myPlayerConst->PlayerMovement.nAirJumpHight = tok.GetInt();
+					myPlayerConst->PlayerMovement.nAirJumpHight = tok.GetFloat();
 				if (!tok.CheckToken("yaccel"))
 					tok.GetToken();
 				if (tok.CheckToken("="))
@@ -292,7 +292,7 @@ void CStateParser::ParseStateFile(const char* strFileName, CStateManager &StateM
 				char strStateInfo[100] = "";
 				if (tok.CheckToken(",", true)){
 					while (!tok.CheckToken("]")){
-						strcat(strStateInfo, tok.GetToken());
+						strcat_s(strStateInfo, tok.GetToken());
 					}
 				}
 				//Error("Expected a number in statedef block", tok);
@@ -470,7 +470,7 @@ void CStateParser::ParseStateDef(CTokenizer &tok, CStateManager &StateManager)
 			if (!tok.CheckTokenIsNumber())
 				Error("Expected a number for ctrl", tok);
 
-			StateManager.SetStateCtrl(tok.GetInt());
+			StateManager.SetStateCtrl(tok.GetBool());
 
 		}
 		else if (tok.CheckToken("poweradd"))
@@ -503,7 +503,7 @@ void CStateParser::ParseStateDef(CTokenizer &tok, CStateManager &StateManager)
 			if (!tok.CheckTokenIsNumber())
 				Error("Expected a number for facep2", tok);
 
-			StateManager.SetStateFaceP2(tok.GetInt());
+			StateManager.SetStateFaceP2(tok.GetBool());
 
 		}
 		else if (tok.CheckToken("hitdefpersist"))
@@ -514,7 +514,7 @@ void CStateParser::ParseStateDef(CTokenizer &tok, CStateManager &StateManager)
 			if (!tok.CheckTokenIsNumber())
 				Error("Expected a number for hitdefpersist", tok);
 
-			StateManager.SetStateHitDefPresit(tok.GetInt());
+			StateManager.SetStateHitDefPresit(tok.GetBool());
 
 		}
 		else if (tok.CheckToken("movehitpersist"))
@@ -525,7 +525,7 @@ void CStateParser::ParseStateDef(CTokenizer &tok, CStateManager &StateManager)
 			if (!tok.CheckTokenIsNumber())
 				Error("Expected a number for movehitpersist", tok);
 
-			StateManager.SetMoveHitPresit(tok.GetInt());
+			StateManager.SetMoveHitPresit(tok.GetBool());
 
 		}
 		else if (tok.CheckToken("hitcountpersist"))
@@ -536,7 +536,7 @@ void CStateParser::ParseStateDef(CTokenizer &tok, CStateManager &StateManager)
 			if (!tok.CheckTokenIsNumber())
 				Error("Expected a number for hitcountpersist", tok);
 
-			StateManager.SetStateHitCounterPresit(tok.GetInt());
+			StateManager.SetStateHitCounterPresit(tok.GetBool());
 
 
 		}
@@ -660,9 +660,9 @@ void CStateParser::EvaluateExpression(CTokenizer &tok, CStateManager &StateManag
 		else if (tok.CheckToken("="))
 		{
 			if (tok.CheckToken("[")){
-				StateManager.AddInstruction(OP_PUSH, tok.GetInt(), "#");
+				StateManager.AddInstruction(OP_PUSH, tok.GetFloat(), "#");
 				if (tok.CheckToken(",")){}
-				StateManager.AddInstruction(OP_PUSH, tok.GetInt(), "#");
+				StateManager.AddInstruction(OP_PUSH, tok.GetFloat(), "#");
 				if (tok.CheckToken("]")){
 					StateManager.AddInstruction(OP_INTERVALOP1, 0, "#");
 				}
@@ -692,9 +692,9 @@ void CStateParser::EvaluateExpression(CTokenizer &tok, CStateManager &StateManag
 		{
 
 			if (tok.CheckToken("[")){
-				StateManager.AddInstruction(OP_PUSH, tok.GetInt(), "#");
+				StateManager.AddInstruction(OP_PUSH, tok.GetFloat(), "#");
 				if (tok.CheckToken(",")){}
-				StateManager.AddInstruction(OP_PUSH, tok.GetInt(), "#");
+				StateManager.AddInstruction(OP_PUSH, tok.GetFloat(), "#");
 				if (tok.CheckToken("]")){
 					StateManager.AddInstruction(OP_INTERVALOP5, 0, "#");
 				}
@@ -806,7 +806,7 @@ void CStateParser::EvaluateExpression(CTokenizer &tok, CStateManager &StateManag
 		}
 		else if (tok.CheckTokenIsStatetype() != -1)
 		{
-			StateManager.AddInstruction(OP_PUSH, tok.CheckTokenIsStatetype(), "#");
+			StateManager.AddInstruction(OP_PUSH, (float)tok.CheckTokenIsStatetype(), "#");
 			tok.GetToken();
 			if (tok.AtEndOfLine() || tok.AtEndOfFile())
 				return;
@@ -888,26 +888,26 @@ void CStateParser::EvaluateExpression(CTokenizer &tok, CStateManager &StateManag
 			const char *conStr = tok.GetToken();
 			if (conStr == NULL)
 				return;
-			StateManager.AddInstruction(OP_PUSH, GetConstNum(conStr), conStr);
+			StateManager.AddInstruction(OP_PUSH, (float)GetConstNum(conStr), conStr);
 			StateManager.AddInstruction(OP_Const, 0, "#");
 			if (tok.CheckToken(")")){}
 		}
 		else if (tok.CheckToken("Const240p")){
 			if (tok.CheckToken("(")){}
-			StateManager.AddInstruction(OP_PUSH, tok.GetInt(), "#");
+			StateManager.AddInstruction(OP_PUSH, tok.GetFloat(), "#");
 			StateManager.AddInstruction(OP_ConstCoordinate, 240, "#");
 			if (tok.CheckToken(")")){}
 		}
 		else if (tok.CheckToken("Const480p")){
 			if (tok.CheckToken("(")){}
-			StateManager.AddInstruction(OP_PUSH, tok.GetInt(), "#");
+			StateManager.AddInstruction(OP_PUSH, tok.GetFloat(), "#");
 			StateManager.AddInstruction(OP_ConstCoordinate, 480, "#");
 			if (tok.CheckToken(")")){}
 		}
 
 		else if (tok.CheckToken("Const720p")){
 			if (tok.CheckToken("(")){}
-			StateManager.AddInstruction(OP_PUSH, tok.GetInt(), "#");
+			StateManager.AddInstruction(OP_PUSH, tok.GetFloat(), "#");
 			StateManager.AddInstruction(OP_ConstCoordinate, 720, "#");
 			if (tok.CheckToken(")")){}
 		}
@@ -917,8 +917,8 @@ void CStateParser::EvaluateExpression(CTokenizer &tok, CStateManager &StateManag
 				tmpEq = 0;
 			else
 				tmpEq = 1;
-			StateManager.AddInstruction(OP_PUSH, GetCommandNum(tok.GetToken()), "#");
-			StateManager.AddInstruction(OP_PUSH, tmpEq, "#");
+			StateManager.AddInstruction(OP_PUSH, (float)GetCommandNum(tok.GetToken()), "#");
+			StateManager.AddInstruction(OP_PUSH, (float)tmpEq, "#");
 			StateManager.AddInstruction(OP_Command, 0, "#");
 
 		}
@@ -946,13 +946,13 @@ void CStateParser::EvaluateExpression(CTokenizer &tok, CStateManager &StateManag
 				case OP_AnimElemTime:
 
 					if (tok.CheckToken("(")){}
-					StateManager.AddInstruction(OP_PUSH, tok.GetInt(), "#");
+					StateManager.AddInstruction(OP_PUSH, tok.GetFloat(), "#");
 					StateManager.AddInstruction(i + OP_Abs, 0, "#");
 					if (tok.CheckToken(")")){}
 					break;
 				case OP_GetHitVar:
 					if (tok.CheckToken("(")){}
-					StateManager.AddInstruction(OP_PUSH, GetHitVarNum(tok.GetToken()), "#");
+					StateManager.AddInstruction(OP_PUSH, (float)GetHitVarNum(tok.GetToken()), "#");
 					if (tok.CheckToken(")")){}
 					StateManager.AddInstruction(OP_GetHitVar, 0, "#");
 					break;
@@ -982,7 +982,7 @@ int CStateParser::GetControllerType(const char * strType, CTokenizer &tok)
 	int i = 0;
 	while (strControllerTypes[i])
 	{
-		if (strcmpi(strType, strControllerTypes[i]) == 0)
+		if (_strcmpi(strType, strControllerTypes[i]) == 0)
 			return i;
 
 		i++;
@@ -998,7 +998,7 @@ int CStateParser::GetTriggerType(const char * strTrigger, CTokenizer &tok)
 	int i = 0;
 	while (strTriggerType[i])
 	{
-		if (strcmpi(strTrigger, strTriggerType[i]) == 0)
+		if (_strcmpi(strTrigger, strTriggerType[i]) == 0)
 			return i;
 
 
@@ -1017,7 +1017,7 @@ int CStateParser::GetFlagNum(const char * strFlagTemp)
 	int flag = 1;
 	while (strFlag[i])
 	{
-		if (strcmpi(strFlagTemp, strFlag[i]) == 0)
+		if (_strcmpi(strFlagTemp, strFlag[i]) == 0)
 			return flag;
 		i++;
 		flag *= 2;
@@ -1029,7 +1029,7 @@ int CStateParser::GetConstNum(const char * strConstTemp)
 	int i = 0;
 	while (strConst[i])
 	{
-		if (strcmpi(strConstTemp, strConst[i]) == 0)
+		if (_strcmpi(strConstTemp, strConst[i]) == 0)
 			return i;
 		i++;
 	}
@@ -1040,7 +1040,7 @@ int CStateParser::GetCommandNum(const char * strCommandTemp)
 	int count = m_CmdManager->GetCount();
 	PLCOMMAND* command = m_CmdManager->GetCommand();
 	for (int i = 0; i < count; i++){
-		if (strcmpi(command[i].strCommand, strCommandTemp) == 0)
+		if (_strcmpi(command[i].strCommand, strCommandTemp) == 0)
 			return i;
 	}
 	return -1;
@@ -1048,7 +1048,7 @@ int CStateParser::GetCommandNum(const char * strCommandTemp)
 int CStateParser::GetHitVarNum(const char * strHitVarTemp)
 {
 	for (int i = 0; i < GetHitVarCount; i++){
-		if (strcmpi(strGetHitVar[i], strHitVarTemp) == 0)
+		if (_strcmpi(strGetHitVar[i], strHitVarTemp) == 0)
 			return i;
 	}
 	return -1;
@@ -1154,7 +1154,7 @@ void CStateParser::ParseSndAction(CTokenizer &tok, CStateManager &StateManager){
 	else if (tok.CheckToken("volumescale"))
 	{
 		tok.CheckToken("=");
-		StateManager.SetParamNum(CPN_volumescale, tok.GetFloat());
+		StateManager.SetParamNum(CPN_volumescale, tok.GetInt());
 	}
 	else if (tok.CheckToken("channel"))
 	{
@@ -1169,7 +1169,7 @@ void CStateParser::ParseSndAction(CTokenizer &tok, CStateManager &StateManager){
 	else if (tok.CheckToken("freqmul"))
 	{
 		tok.CheckToken("=");
-		StateManager.SetParamNum(CPN_freqmul, tok.GetFloat());
+		StateManager.SetParamNum(CPN_freqmul, tok.GetInt());
 	}
 	else if (tok.CheckToken("loop"))
 	{
@@ -1195,7 +1195,6 @@ void CStateParser::ParseNormalAction(CTokenizer &tok, CStateManager &StateManage
 {
 	//CHANGESTATE *temp=(CHANGESTATE*) m_pAlloc->Alloc(sizeof(CHANGESTATE));
 	//TODO:Check for Required parameters and print error msg
-	// 不能吃掉token，否则下个state就无法匹配，"["会首先被吃掉
 
 	StateManager.NewInst();
 	if (tok.CheckToken("value"))
@@ -1204,7 +1203,6 @@ void CStateParser::ParseNormalAction(CTokenizer &tok, CStateManager &StateManage
 			Error("expected =", tok);
 
 		EvaluateExpression(tok, StateManager);
-		// 设置当前state的参数
 		StateManager.SetParam(CPN_value);
 	}
 	else if (tok.CheckToken("ctrl"))
@@ -1245,21 +1243,19 @@ void CStateParser::ParseNormalAction(CTokenizer &tok, CStateManager &StateManage
 		{
 		}
 		int num = tok.GetInt();
-		//EvaluateExpression(tok, StateManager);
 		if (!tok.CheckToken(")"))
 		{
 		}
 		if (!tok.CheckToken("="))
 			Error("expected =", tok);
 		EvaluateExpression(tok, StateManager);
-		// 设置当前state的参数
 		StateManager.SetParamNum(CPN_sysvar, num);
 	}
 	else if (tok.CheckToken("flag"))
 	{
 		if (!tok.CheckToken("="))
 			Error("expected =", tok);
-		StateManager.AddInstruction(OP_PUSH, GetFlagNum(tok.GetToken()), "#");
+		StateManager.AddInstruction(OP_PUSH, (float)GetFlagNum(tok.GetToken()), "#");
 		StateManager.SetParam(CPN_flag);
 	}
 	else if (tok.CheckToken("pos"))
@@ -1316,7 +1312,7 @@ HITDEFVARSET CStateParser::GetHitVarSet(CTokenizer &tok, PARSERVAR PV, bool b){
 		hitVarSet.uVar1 = tok.GetInt();
 		break;
 	case P_UU:
- 		hitVarSet.uVar1 = tok.GetInt();
+		hitVarSet.uVar1 = tok.GetInt();
 		if (tok.CheckToken(",")){
 			hitVarSet.uVar2 = tok.GetInt();
 		}
@@ -1337,7 +1333,7 @@ HITDEFVARSET CStateParser::GetHitVarSet(CTokenizer &tok, PARSERVAR PV, bool b){
 		break;
 	case P_B:
 	{
-				hitVarSet.bVar1 = tok.GetInt();
+				hitVarSet.bVar1 = tok.GetBool();
 	}
 		break;
 	case P_BU:
@@ -1504,7 +1500,7 @@ HITDEFVAR CStateParser::GetHDV(const char* hdv, bool b){
 	int i = 0;
 	while (i < HITDEFVARNUM)
 	{
-		if (b ? (strcmpi(hdv, strHitDefVar[i]) == 0) : (strnicmp(hdv, strHitDefVar[i], 1) == 0))
+		if (b ? (_strcmpi(hdv, strHitDefVar[i]) == 0) : (_strnicmp(hdv, strHitDefVar[i], 1) == 0))
 			return HITDEFVAR(i+1);
 		i++;
 	}

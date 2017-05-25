@@ -27,7 +27,7 @@ CVirtualMachine::CVirtualMachine()
     m_Stack.ResetStack();
     nCurrentIns=0;
     InitFunctTable();
-	srand(time(NULL));
+	srand((u16)time(NULL));
 }
 //Destructor
 CVirtualMachine::~CVirtualMachine()
@@ -601,7 +601,7 @@ void CVirtualMachine::Not()
     
     temp1=m_pop.Value;
         
-    temp1=!(int)temp1;
+    temp1=!(s16)temp1;
     m_Stack.Push(temp1,"#");
 
 }
@@ -613,7 +613,7 @@ void CVirtualMachine::And()
     PopValue();
     temp1=m_pop.Value;
     
-    temp1=(int)temp1 & (int)temp2;
+    temp1=(float)((s16)temp1 & (s16)temp2);
     m_Stack.Push(temp1,"#");
 
 }
@@ -625,8 +625,8 @@ void CVirtualMachine::Or()
     PopValue();
     temp1=m_pop.Value;
     
-    temp1=(int)temp1 | (int)temp2;
-    m_Stack.Push(temp1,"#");
+	temp1 = (float)((s16)temp1 | (s16)temp2);
+	m_Stack.Push(temp1, "#");
 
 }
 
@@ -637,7 +637,7 @@ void CVirtualMachine::Xor()
     PopValue();
     temp1=m_pop.Value;
     
-    temp1=(int)temp1 ^ (int)temp2;
+	temp1 = (float)((s16)temp1 ^ (s16)temp2);
     m_Stack.Push(temp1,"#");
 
 }
@@ -728,7 +728,7 @@ void CVirtualMachine::AnimeElemNo()
 
         
     PopValue();
-    nTimeOffset=(int)m_pop.Value;
+    nTimeOffset=(s16)m_pop.Value;
     
     nTimeCheck=nTimeOffset+tActionElement->nCurrTime;
     
@@ -770,7 +770,7 @@ void CVirtualMachine::AnimeElemTime()
     int nElementToCheck;
 
     PopValue();
-    nElementToCheck=(int)m_pop.Value;
+    nElementToCheck=(s16)m_pop.Value;
     
     //(NOTE first element is not 0 it is 1)
     if(nElementToCheck == tActionElement->nCurrentImage+1 && !tActionElement->bLooped )
@@ -810,7 +810,7 @@ void CVirtualMachine::AnimTime()
 
 	nAnimTime = (s16)tActionElement->nCurrTime - tActionElement->nCompletAnimTime ;
 	
-    m_Stack.Push((int)nAnimTime,"#");
+    m_Stack.Push((float)nAnimTime,"#");
 }
 
 //Asin(expr)
@@ -884,9 +884,9 @@ void CVirtualMachine::Command()
 	PopValue();
 	
 	if (temp1 == 0)// EQUAL
-		m_Stack.Push((m_pPlayer1->GetBCommand()[(int)m_pop.Value]),"#");
+		m_Stack.Push((m_pPlayer1->GetBCommand()[(s16)m_pop.Value]),"#");
 	else// NOT EQUAL
-		m_Stack.Push((!m_pPlayer1->GetBCommand()[(int)m_pop.Value]), "#");
+		m_Stack.Push((!m_pPlayer1->GetBCommand()[(s16)m_pop.Value]), "#");
 	
 	
 }
@@ -897,7 +897,7 @@ void CVirtualMachine::Const()
 	PopValue();
     temp1=m_pop.Value;
     //TODO: Write the GetConst function for player
-   switch((int)temp1)
+   switch((s16)temp1)
    {
       //data.life
       case Const_Data_Life:
@@ -916,7 +916,7 @@ void CVirtualMachine::Const()
       
       //data.fall.defence_mul
       case 3:
-         temp1=100/(m_pPlayer1->GetConst().PlayerData.nFallDefenceUp+100);
+		  temp1 = (float)(100 / (m_pPlayer1->GetConst().PlayerData.nFallDefenceUp + 100));
         m_Stack.Push(temp1,"#");
       break;
       
@@ -1264,7 +1264,7 @@ void CVirtualMachine::FVar()
     PopValue();
     temp1=m_pop.Value;
     
-	temp1 = m_pPlayer1->GetVar(CPN_fvar,temp1);
+	temp1 = m_pPlayer1->GetVar(CPN_fvar,(u8)temp1);
     m_Stack.Push(temp1,"#");
 
 }
@@ -1284,34 +1284,34 @@ void CVirtualMachine::GetHitVar()
     PopValue();
     temp1=m_pop.Value;
 	HITVARDATA hitVarData = m_pPlayer2->GetHitVarData();
-	switch (GetHitVarNum((int)temp1)){
+	switch (GetHitVarNum((s16)temp1)){
 	case xveladd:break;
 	case yveladd:break;
 	case type:break;
-		case animtype:temp1 = hitVarData.animtype; break;
+		case animtype:temp1 = (float)hitVarData.animtype; break;
 		case airtype:break;
-		case groundtype:temp1 = hitVarData.ground_type-6; break;
-		case damage:temp1 = hitVarData.hit_damage; break;
+		case groundtype:temp1 = (float)hitVarData.ground_type - 6; break;
+		case damage:temp1 = (float)hitVarData.hit_damage; break;
 		case hitcount:break;
 		case fallcount:temp1 = 0; break;
-		case hitshaketime:temp1 = hitVarData.hitshaketime; break;
-		case hittime:temp1 = hitVarData.ground_hittime; break;
-		case slidetime:temp1 = hitVarData.ground_slidetime; break;
+		case hitshaketime:temp1 = (float)hitVarData.hitshaketime; break;
+		case hittime:temp1 = (float)hitVarData.ground_hittime; break;
+		case slidetime:temp1 = (float)hitVarData.ground_slidetime; break;
 		case ctrltime:break;
 		case recovertime:break;
 		case xoff:break;
 		case yoff:break;
 		case zoff:break;
 		case xvel:temp1 = 0; break;
-		case yvel:temp1 = hitVarData.ground_velocity.y; break;
-		case yaccel:temp1 = hitVarData.yaccel; break;
+		case yvel:temp1 = (float)hitVarData.ground_velocity.y; break;
+		case yaccel:temp1 = (float)hitVarData.yaccel; break;
 		case hitid:break;
 		case chainid:break;
 		case guarded:break;
-		case fall:temp1=hitVarData.fall; break;
+		case fall:temp1 = (float)hitVarData.fall; break;
 		case fall_damage:break;
 		case fall_xvel:break;
-		case fall_yvel:temp1 = hitVarData.fall_yvelocity; break;
+		case fall_yvel:temp1 = (float)hitVarData.fall_yvelocity; break;
 		case fall_recover:break;
 		case fall_time:break;
 		case fall_recovertime:break;
@@ -1444,7 +1444,7 @@ void CVirtualMachine::Log()
 void CVirtualMachine::Lose()
 {
     //Pop the parameter 1=Lose, 2=LoseKO ,3=LoseTime
-    switch((int)m_Stack.Pop().Value)
+    switch((s16)m_Stack.Pop().Value)
     {
         case 1:
           m_Stack.Push(0,"#");
@@ -1528,7 +1528,7 @@ void CVirtualMachine::NumExplod()
      if(m_Stack.Pop().Value==1)
     {
         //Pop the parameter
-         PrintMessage("NumExplod Paramerter is %i",(int)m_Stack.Pop().Value);
+         PrintMessage("NumExplod Paramerter is %i",(s16)m_Stack.Pop().Value);
           m_Stack.Push(0,"#");
     }
     else
@@ -1545,7 +1545,7 @@ void CVirtualMachine::NumHelper()
     if(m_Stack.Pop().Value==1)
     {
         //Pop the parameter
-         PrintMessage("NumHelper Paramerter is %i",(int)m_Stack.Pop().Value);
+         PrintMessage("NumHelper Paramerter is %i",(s16)m_Stack.Pop().Value);
           m_Stack.Push(0,"#");
     }
     else
@@ -1579,7 +1579,7 @@ void CVirtualMachine::NumTarget()
    if(m_Stack.Pop().Value==1)
     {
         //Pop the parameter
-         PrintMessage("NumTarget Paramerter is %i",(int)m_Stack.Pop().Value);
+         PrintMessage("NumTarget Paramerter is %i",(s16)m_Stack.Pop().Value);
           m_Stack.Push(0,"#");
     }
     else
@@ -1784,7 +1784,7 @@ void CVirtualMachine::SelfAnimExist()
 {
     int nAnim;
     PopValue();
-    nAnim=(int)m_pop.Value;
+    nAnim=(s16)m_pop.Value;
     //If != NULL push true else push false
     if(m_pPlayer1->GetAirAction(nAnim) != NULL)
         m_Stack.Push(1,"#");
@@ -1815,7 +1815,7 @@ void CVirtualMachine::SysFVar()
 	PopValue();
 	temp1 = m_pop.Value;
 
-	temp1 = m_pPlayer1->GetVar(CPN_sysfvar, temp1);
+	temp1 = m_pPlayer1->GetVar(CPN_sysfvar, (u8)temp1);
 	m_Stack.Push(temp1, "#");
 
 }
@@ -1825,7 +1825,7 @@ void CVirtualMachine::SysVar()
 	PopValue();
 	temp1 = m_pop.Value;
 
-	temp1 = m_pPlayer1->GetVar(CPN_sysvar, temp1);
+	temp1 = m_pPlayer1->GetVar(CPN_sysvar, (u8)temp1);
 	m_Stack.Push(temp1, "#");
 
 }
@@ -1852,7 +1852,7 @@ void CVirtualMachine::TicksPerSecond()
 
 void CVirtualMachine::Time()
 {
-	m_Stack.Push((m_pPlayer1->GetTime()), "#");
+	m_Stack.Push((float)(m_pPlayer1->GetTime()), "#");
 }
 
 void CVirtualMachine::UniqHitCount()
@@ -1865,7 +1865,7 @@ void CVirtualMachine::Var()
 	PopValue();
 	temp1 = m_pop.Value;
 
-	temp1 = m_pPlayer1->GetVar(CPN_var, temp1);
+	temp1 = m_pPlayer1->GetVar(CPN_var, (u8)temp1);
 	m_Stack.Push(temp1, "#");
 
 }
@@ -1890,7 +1890,7 @@ void CVirtualMachine::Vel()
 
 void CVirtualMachine::Win()
 {
-    switch((int)m_Stack.Pop().Value)
+    switch((s16)m_Stack.Pop().Value)
     {
         //Win
         case 1:
@@ -1947,9 +1947,9 @@ void CVirtualMachine::MODOP()
     int nDividend,nDivisor;
     
     PopValue();
-    nDivisor=(int)m_pop.Value;
+    nDivisor=(s16)m_pop.Value;
     PopValue();
-    nDividend=(int)m_pop.Value;
+    nDividend=(s16)m_pop.Value;
  #ifdef DEBUG
     PrintMessage("ModOp %i Mod %i=%i",nDividend,nDivisor);
 #endif   

@@ -121,7 +121,7 @@ bool CCmdManager::LoadCMDFile( const char* file ,CAllocater *a)
 							if (strcmp((command-i)->strCommand,str)==0)
 								command->num = num-i;
 						}
-						strcpy(command->strCommand, str);
+						strcpy_s(command->strCommand, str);
                     }
                     else if( tok.CheckToken( "command" ) )
                     {
@@ -294,7 +294,7 @@ void CCmdManager::Update( KEYBOARDDATA* keys, bool facingRight )
     PLCOMMAND* currCommand = m_Commands;
     for( int a = 0; a < m_CommandCount; a++ )// 葛电 目盖靛 风橇
     {           
-        int nTime = -1, nLastTime = -1;
+        s16 nTime = -1, nLastTime = -1;
         int currKeyIndex = 0;
 
 		// 使用例子command = ~D, DF, F, x讲解
@@ -408,8 +408,7 @@ void CCmdManager::Update( KEYBOARDDATA* keys, bool facingRight )
             // the last button of the sequenz must be pressed int the Current game tick to
             // be valid and then it must be check for how long it has taken to do the input
            // int gameTicks = GetGameTicks();
-			// bufer时间，即时命令有效的tick时间
-           if( ( nLastTime > ( m_pTimer->GetGameTime()- currCommand->nBufferTime )) && ( nLastTime - nTime ) <= currCommand->nCommandTime )
+           if( ( nLastTime > ( (s16)m_pTimer->GetGameTime() - currCommand->nBufferTime )) && ( nLastTime - nTime ) <= currCommand->nCommandTime )
             {
                 m_CurrCommandName = currCommand->strCommand;
 				if (strcmp("holdfwd", m_CurrCommandName) == 0)

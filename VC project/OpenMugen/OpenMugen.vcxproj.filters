@@ -171,13 +171,13 @@
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="dll\SDL.dll">
-      <Filter>dll</Filter>
-    </CustomBuild>
     <CustomBuild Include="dll\SDL2.dll">
       <Filter>dll</Filter>
     </CustomBuild>
     <CustomBuild Include="dll\SDL2_mixer.dll">
+      <Filter>dll</Filter>
+    </CustomBuild>
+    <CustomBuild Include="dll\SDL.dll">
       <Filter>dll</Filter>
     </CustomBuild>
   </ItemGroup>

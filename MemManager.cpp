@@ -3,7 +3,7 @@
 CAllocater::CAllocater(char *strName)
 {
    //copy the name
-   strcpy(strAllocName,strName);
+   strcpy_s(strAllocName,strName);
    nAllocSize=0;
 	lpMemList=NULL;                
 }

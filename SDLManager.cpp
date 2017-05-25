@@ -37,6 +37,7 @@ CSDLManager::CSDLManager()
 //Init the SDL SUB systems
 bool CSDLManager::Init()
 {
+	
     PrintMessage("CSDLManager:: Init()");
 
     //Init SDL and the sub-systems of it(VIDEO, TIMER AND AUDIO SYSTEM)
@@ -51,13 +52,14 @@ bool CSDLManager::Init()
     SDL_WM_SetIcon(SDL_LoadBMP("icon.bmp"), NULL);
     
     //Now init ouer Video System
+	
     if(!m_VideoSystem.InitSystem())
     {
         PrintMessage("CSDLManager:: VideoSystem Init Failed");
         return false;
     }
     PrintMessage("CSDLManager::VideoSystem Init OK");
-
+	
 	return true;
 }
 

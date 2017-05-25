@@ -13,13 +13,13 @@ void PrintMessage(char *str,...)
 
   va_list ap;                // Pointer To List Of Arguments
   va_start(ap, str);         // Parses The String For Variables
-  vsprintf(string, str, ap); // Converts Symbols To Actual Numbers
+  vsprintf_s(string, str, ap); // Converts Symbols To Actual Numbers
   va_end(ap);      
   
 #ifdef _XBOX
   pLogFile=fopen("d:\\log.txt","a+");
 #else
-  pLogFile=fopen("log.txt","a+");
+  fopen_s(&pLogFile,"log.txt", "a+");
 #endif  
   
   fprintf(pLogFile,string);
@@ -39,7 +39,7 @@ void InitLogFile()
    #ifdef _XBOX
 	pLogFile=fopen("d:\\log.txt","w");
    #else
-	pLogFile=fopen("log.txt","w");
+	fopen_s(&pLogFile,"log.txt", "w");
    #endif 
 	fclose(pLogFile);
 

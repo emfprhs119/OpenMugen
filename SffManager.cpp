@@ -45,7 +45,7 @@ bool CSffManager::LoadSffFile(const char *strSffFile)
 
   PrintMessage("CSffManager::Loading %s",strSffFile);
   
-  lpSffFile=fopen(strSffFile,"rb");
+  fopen_s(&lpSffFile,strSffFile, "rb");
   
   if(lpSffFile==0)
   {
@@ -83,7 +83,8 @@ bool CSffManager::LoadActToSff(const char *strActFile)
 {
   //bPalletLoaded=true;    
   
-  FILE *Act=fopen(strActFile,"rb");
+	FILE *Act;
+	fopen_s(&Act, strActFile, "rb");
 
 	if(Act==NULL)
 	   	PrintMessage("CSffSpriteManager %s File not found",strActFile);
@@ -198,7 +199,7 @@ u8* CSffManager::DecodePcx(u8* PcxByte,PCXHEADER header)
   u8* byImageBuffer=0;
   u8 BPP,byData;  
   u16 size;
-  s16 x,y,widht;
+  s16 x,y,width;
   u32 Pos=0;
   
   u32 nCountByte,nTotalyByte,
@@ -213,12 +214,12 @@ u8* CSffManager::DecodePcx(u8* PcxByte,PCXHEADER header)
   BPP=header.NPlanes*8; 
   
   //allocate memory
-  byImageBuffer=(u8*)m_pAlloc->Alloc(sizeof(u8)*(header.widht*header.NPlanes*header.height+1));
+  byImageBuffer=(u8*)m_pAlloc->Alloc(sizeof(u8)*(header.width*header.NPlanes*header.height+1));
   
-  widht=header.widht;
+  width=header.width;
 
-  if(widht<header.bytesPerLine * header.NPlanes)
-		widht=header.bytesPerLine*header.NPlanes;
+  if(width<header.bytesPerLine * header.NPlanes)
+		width=header.bytesPerLine*header.NPlanes;
 		
    //we do not support 24bit pcx images
    if(BPP>8)
@@ -234,7 +235,7 @@ u8* CSffManager::DecodePcx(u8* PcxByte,PCXHEADER header)
 	for(y=0;y<header.height;y++)
 	{
 		x=0;
-		while(x < widht)
+		while(x < width)
 		{
 	     
 			  byData=PcxByte[Pos++];
@@ -252,16 +253,16 @@ u8* CSffManager::DecodePcx(u8* PcxByte,PCXHEADER header)
 
 			       while(size-- > 0)
 				  {
-					  if(x <= header.widht)
+					  if(x <= header.width)
 					  {
-						byImageBuffer[x + (y * header.widht)]=byData;
+						byImageBuffer[x + (y * header.width)]=byData;
 						
 					  }
 					//this it to Skip blank data on PCX image wich are on the right side
 					//TODO:OK? Skip two bytes
-      				  if(x == widht && widht != header.widht)
+      				  if(x == width && width != header.width)
       				  {
-      				         nHowManyBlank=widht-header.widht;
+      				         nHowManyBlank=width-header.width;
       				         for(u32 i=0;i<nHowManyBlank;i++)
 					              Pos+=2;
 					  }
@@ -307,7 +308,7 @@ void CSffManager::DecodeSffFile()
         fread(&lpSpriteList[nTotalImages].PcxHeader,sizeof(PCXHEADER),1,lpSffFile);
         
         //Correct the Image dimension 
-		lpSpriteList[nTotalImages].PcxHeader.widht=lpSpriteList[nTotalImages].PcxHeader.widht - lpSpriteList[nTotalImages].PcxHeader.x + 1;
+		lpSpriteList[nTotalImages].PcxHeader.width=lpSpriteList[nTotalImages].PcxHeader.width - lpSpriteList[nTotalImages].PcxHeader.x + 1;
 		lpSpriteList[nTotalImages].PcxHeader.height=lpSpriteList[nTotalImages].PcxHeader.height - lpSpriteList[nTotalImages].PcxHeader.y +1;
 		
 		//now read the pcx data 

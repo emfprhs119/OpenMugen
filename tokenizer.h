@@ -25,6 +25,7 @@ public:
 	int		CheckTokenIsStatetype();
     bool        CheckTokenIsQuotedString();  // makes sure token is quoted string
     
+	bool		GetBool();
     int         GetInt();
     float       GetFloat();
 	XYVALUE		getXYVALUE();

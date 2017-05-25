@@ -289,7 +289,7 @@ void CStateManager::SetDefaultStatedef()
 	lpStateDefList[nTotalStateDef-1].nAnim           =-1;
 	lpStateDefList[nTotalStateDef-1].Velset.x        =-3333;
 	lpStateDefList[nTotalStateDef-1].Velset.y        =-3333;
-	lpStateDefList[nTotalStateDef-1].bCtrl           =-1;
+	lpStateDefList[nTotalStateDef-1].nCtrl           =-1;
 	lpStateDefList[nTotalStateDef-1].nPoweradd       =-3333;
 	lpStateDefList[nTotalStateDef-1].bFacep2         =false;
 	lpStateDefList[nTotalStateDef-1].nJuggle         =-3333;
@@ -303,9 +303,9 @@ void CStateManager::SetStateAnim(s32 nAnim)
 {
 	lpStateDefList[nTotalStateDef-1].nAnim=nAnim;
 }
-void CStateManager::SetStateCtrl(s8 nCtrl)
+void CStateManager::SetStateCtrl(bool nCtrl)
 {
-	lpStateDefList[nTotalStateDef-1].bCtrl=nCtrl;
+	lpStateDefList[nTotalStateDef-1].nCtrl=nCtrl;
 }
 void CStateManager::SetStatePowerAdd(s16 nPowerAdd)
 {
@@ -414,7 +414,7 @@ void CStateManager::AddInstruction(Uint16 nOpCode,float value,const char *strVal
 	if(strValue[0]!='#')
 	{
 		pInst[nCurrInst].strValue=new char[strlen(strValue)+1];   
-		strcpy(pInst[nCurrInst].strValue,strValue);
+		strcpy_s(pInst[nCurrInst].strValue, strlen(strValue)+1, strValue);
 	}
 
 	nCurrInst++;

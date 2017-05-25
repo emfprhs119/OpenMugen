@@ -78,9 +78,10 @@ bool CTokenizer::OpenFile( const char* filename )
     if( m_FileBuffer )
         return false;
         
-    strcpy( m_Filename, filename );
+    strcpy_s( m_Filename,256, filename );
     
-    FILE* file = fopen( filename, "rb" );
+	FILE* file;
+	fopen_s(&file, filename, "rb");
     if( !file )
     {
         throw(CError("CTokenizer::OpenFile: File %s not found",filename));
@@ -273,7 +274,7 @@ const char* CTokenizer::GetToken()
                 {
                     for( int a = 0; a < m_OperatorCount; a++ )
                     {
-                        bool prevCharsMatched = ( strlen( m_Operators[ a ] ) > m_NumOperatorCharsRead );
+                        bool prevCharsMatched = ( (int)strlen( m_Operators[ a ] ) > m_NumOperatorCharsRead );
                         for( int b = 0; prevCharsMatched && ( b < m_NumOperatorCharsRead ); b++ )
                         {
                             if( m_Buffer[ b ] != ( m_Operators[ a ] )[ b ] )
@@ -345,7 +346,7 @@ char* CTokenizer::GetPartToken()
 		return false;
 	extern char globalStr[];
 	int maxLength = 99;
-	strncpy(globalStr, m_Buffer, maxLength > m_BufferSize ? m_BufferSize : maxLength );
+	strncpy_s(globalStr, maxLength > m_BufferSize ? m_BufferSize : maxLength, m_Buffer, maxLength > m_BufferSize ? m_BufferSize : maxLength);
 	globalStr[maxLength]='\0';
 	return globalStr;
 }
@@ -355,7 +356,7 @@ bool CTokenizer::GetToken( char* destString, int maxLength )
     if( !GetToken() )
         return false;
 
-    strncpy( destString, m_Buffer, maxLength > m_BufferSize ? m_BufferSize : maxLength );
+	strncpy_s(destString, maxLength > m_BufferSize ? m_BufferSize : maxLength, m_Buffer, maxLength > m_BufferSize ? m_BufferSize : maxLength);
 
     return true;
 }
@@ -368,7 +369,7 @@ bool CTokenizer::CheckToken( const char* stringToLookFor, bool consumeIfMatch )
             return false;
     }
         
-    bool result = m_IsCaseSensitive ? ( strcmp( stringToLookFor, m_Buffer ) == 0 ) : ( strcmpi( stringToLookFor, m_Buffer ) == 0 ); 
+    bool result = m_IsCaseSensitive ? ( strcmp( stringToLookFor, m_Buffer ) == 0 ) : ( _strcmpi( stringToLookFor, m_Buffer ) == 0 ); 
     m_BufferIsNextToken = consumeIfMatch ? !result : true;
 
     return result;    
@@ -380,7 +381,7 @@ int CTokenizer::CheckNToken(const char* stringToLookFor,int length, bool consume
 		if (!GetToken())
 			return false;
 	}
-	bool result = m_IsCaseSensitive ? (strncmp(m_Buffer, stringToLookFor, length) == 0) : (strnicmp(m_Buffer, stringToLookFor, length) == 0);
+	bool result = m_IsCaseSensitive ? (strncmp(m_Buffer, stringToLookFor, length) == 0) : (_strnicmp(m_Buffer, stringToLookFor, length) == 0);
 
 	m_BufferIsNextToken = consumeIfMatch ? !result : true;
 	if (result)
@@ -412,9 +413,22 @@ int CTokenizer::GetInt()
     m_BufferIsNextToken = false;
     return atoi( m_Buffer ); 
 }
+
+bool CTokenizer::GetBool()
+{
+	if (!m_BufferIsNextToken)
+	{
+		if (!GetToken())
+			return 0;
+	}
+
+	m_BufferIsNextToken = false;
+	return atoi(m_Buffer) == 1;
+}
+
 XYVALUE CTokenizer::getXYVALUE()
 {
-	XYVALUE tmpXY;
+	XYVALUE tmpXY = { 0.f, 0.f };
 	if (!m_BufferIsNextToken)
 	{
 		if (!GetToken())

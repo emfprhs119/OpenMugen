@@ -70,7 +70,7 @@ public:
 	void SetStateMoveType(u8 nType);
 	void SetStatePhysicType(u8 nType);
 	void SetStateAnim(s32 nAnim);
-	void SetStateCtrl(s8 nCtrl);
+	void SetStateCtrl(bool nCtrl);
 	void SetStatePowerAdd(s16 nPowerAdd);
 	void SetStateJuggle(s16 nJuggle);
 	void SetStateHitDefPresit(bool bHitDef);

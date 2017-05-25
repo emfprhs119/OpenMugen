@@ -89,8 +89,8 @@ public:
 	void SetKeyBoard(int playerid);
 	void SetVM(CVirtualMachine *p){m_pVMachine=p;}
 	void SetOther(CPlayer* otherPlayer){ other = otherPlayer; }
-	void SetPos(s16 xAxis,s16 yAxis){x=xAxis;y=yAxis;}
-	inline void AddPos(s16 xAxis, s16 yAxis){ x += (bRightFaced ? xAxis : -xAxis); y += yAxis; }
+	void SetPos(float xAxis,float yAxis){x=xAxis;y=yAxis;}
+	inline void AddPos(float xAxis, float yAxis){ x += (bRightFaced ? xAxis : -xAxis); y += yAxis; }
 	void VelSetX(float xvel){xVel = xvel; }
 	void VelSetY(float yvel){yVel=yvel;}
 
